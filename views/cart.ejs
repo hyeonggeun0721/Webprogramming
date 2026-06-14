@@ -140,7 +140,7 @@
       <a href="./orders">주문조회</a>
       
       <% if (typeof user !== 'undefined' && user && user.username === 'admin') { %>
-        <a href="../admin" class="admin-link">[관리자 모드]</a>
+        <a href="./admin" class="admin-link">[관리자 모드]</a>
       <% } %>
     </nav>
   </header>
@@ -171,7 +171,7 @@
                 <tr>
                   <td colspan="5" style="padding: 100px 0;">
                     <p style="color:#94a3b8; font-size: 1.2rem;">장바구니가 비어 있습니다.</p>
-                    <a href="../products" style="margin-top:20px; display:inline-block; color:var(--primary-color); font-weight:700;">상품 보러가기 →</a>
+                    <a href="./products" style="margin-top:20px; display:inline-block; color:var(--primary-color); font-weight:700;">상품 보러가기 →</a>
                   </td>
                 </tr>
               <% } else { %>
@@ -183,7 +183,7 @@
                     </td>
                     <td>
                       <div class="product-info">
-                        <img src="../images/<%= item.image_url || 'default.png' %>" class="product-img">
+                        <img src="./images/<%= item.image_url || 'default.png' %>" class="product-img">
                         <div>
                           <div class="product-name"><%= item.name %></div>
                           <div class="product-price">개당 ₩<%= item.price.toLocaleString() %></div>
