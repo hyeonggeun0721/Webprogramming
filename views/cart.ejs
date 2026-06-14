@@ -202,7 +202,7 @@
                     </td>
                     <td class="item-total">₩<%= (item.price * item.quantity).toLocaleString() %></td>
                     <td>
-                      <form action="./delete" method="POST" style="margin:0;" onsubmit="return confirm('삭제하시겠습니까?');">
+                      <form action="./cart/delete" method="POST" style="margin:0;" onsubmit="return confirm('삭제하시겠습니까?');">
                         <input type="hidden" name="productId" value="<%= item.id %>">
                         <button type="submit" class="delete-btn"><i class="fa-regular fa-trash-can"></i></button>
                       </form>
@@ -223,7 +223,7 @@
               <strong id="finalTotal">₩<%= total.toLocaleString() %></strong>
             </div>
             <div class="checkout-actions">
-              <form id="checkoutForm" action="../order/checkout" method="POST">
+              <form id="checkoutForm" action="./checkout" method="POST">
                 <input type="hidden" name="checkedIds" id="checkedIds">
                 <button type="submit" class="checkout-btn" id="checkoutBtn">
                   <i class="fa-solid fa-credit-card"></i> 구매 진행하기
