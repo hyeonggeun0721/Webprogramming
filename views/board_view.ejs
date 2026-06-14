@@ -194,18 +194,18 @@
 
   <div class="top-bar">
     <% if (typeof user === 'undefined' || !user) { %>
-        <a href="../../login" class="btn-login">로그인</a>
-        <a href="../../user/register" class="btn-login">회원가입</a>
+        <a href="./user/login" class="btn-login">로그인</a>
+        <a href="./user/register" class="btn-login">회원가입</a>
     <% } else { %>
         <span><strong><%= user.name %></strong>님 환영합니다!</span>
-        <a href="../../user/logout" class="btn-logout">로그아웃</a>
+        <a href="./user/logout" class="btn-logout">로그아웃</a>
     <% } %>
   </div>
 
   <header class="main-header">
-    <a href="../../" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
+    <a href="./" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
     <nav>
-      <a href="../../">홈</a>
+      <a href="./">홈</a>
       <a href="../../products">상품목록</a>
       <a href="../../cart">장바구니</a>
       <a href="../" style="color: var(--primary-color); font-weight: 700;">고객센터</a>

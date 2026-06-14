@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>전체 상품 목록 - ECO-LIFE MALL</title>
+  <title>추천 상품 - ECO-LIFE MALL</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -20,8 +20,7 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; }
-
-    body { background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+    body { background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; }
 
     .top-bar { display: flex; justify-content: flex-end; align-items: center; padding: 10px 40px; background-color: var(--primary-color); color: white; font-size: 0.9em; }
     .top-bar span { margin-right: 15px; }
@@ -30,17 +29,8 @@
     .top-bar .btn-logout { background-color: #ef4444; }
 
     header.main-header {
-      background-color: var(--bg-white);
-      padding: 20px 40px; 
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
-      position: sticky;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      top: 0;
-      z-index: 100;
-      flex-wrap: wrap; 
-      gap: 15px;
+      background-color: var(--bg-white); padding: 20px 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+      position: sticky; display: flex; justify-content: space-between; align-items: center; top: 0; z-index: 100; flex-wrap: wrap; gap: 15px;
     }
 
     .logo { font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 700; color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 10px; }
@@ -52,19 +42,11 @@
 
     .page-header { background: linear-gradient(135deg, rgba(6, 78, 59, 0.05) 0%, transparent 100%); padding: 60px 20px; text-align: center; border-bottom: 1px solid rgba(0,0,0,0.05); }
     .page-header h1 { font-family: 'Poppins', sans-serif; font-size: 40px; color: var(--primary-color); margin-bottom: 15px; }
-    .back-link { display: inline-block; color: var(--primary-color); text-decoration: none; font-weight: 700; font-size: 16px; border-bottom: 2px solid var(--accent-color); padding-bottom: 5px; transition: opacity 0.2s; }
+    .page-header p { color: var(--text-gray); font-size: 1.1rem; }
 
-    main { max-width: 1200px; margin: 40px auto 60px; padding: 0 20px; }
+    main { max-width: 1200px; margin: 40px auto; padding: 0 20px; flex: 1; width: 100%; }
     
-    /* 검색창 및 필터 스타일 */
-    .search-filter-bar { display: flex; justify-content: center; margin-bottom: 40px; gap: 10px; flex-wrap: wrap; }
-    .filter-select { padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 15px; color: var(--text-dark); background-color: white; }
-    .search-input { padding: 12px 20px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 15px; width: 100%; max-width: 300px; }
-    .search-input:focus, .filter-select:focus { border-color: var(--primary-color); }
-    .btn-search { background-color: var(--primary-color); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 8px; }
-    .btn-search:hover { background-color: var(--primary-hover); }
-
-    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px; }
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px; margin-bottom: 50px; }
 
     .product-card { background: var(--bg-white); border-radius: 20px; padding: 25px; text-align: center; transition: transform 0.3s ease, box-shadow 0.3s ease; position: relative; border: 1px solid rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center; }
     .product-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
@@ -87,7 +69,9 @@
     .cart-button { width: 100%; padding: 14px; background-color: var(--primary-color); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; font-size: 15px; }
     .cart-button:hover { background-color: var(--primary-hover); }
 
-    .empty-message { text-align: center; padding: 60px 20px; color: var(--text-gray); grid-column: 1 / -1; font-size: 16px; }
+    .view-all-container { text-align: center; margin-top: 20px; padding-top: 30px; border-top: 1px solid var(--border-color); }
+    .view-all-btn { display: inline-flex; align-items: center; gap: 10px; padding: 16px 40px; background-color: var(--bg-white); color: var(--primary-color); border: 2px solid var(--primary-color); border-radius: 30px; font-size: 16px; font-weight: 700; text-decoration: none; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    .view-all-btn:hover { background-color: var(--primary-color); color: white; transform: translateY(-3px); box-shadow: 0 8px 15px rgba(6,78,59,0.2); }
 
     footer { text-align: center; padding: 60px 20px; background: var(--primary-color); color: rgba(255,255,255,0.6); font-size: 14px; margin-top: auto; }
 
@@ -98,19 +82,11 @@
     .btn-continue { background: #f1f5f9; color: var(--text-gray); } 
     .btn-continue:hover { background: #e2e8f0; }
     .btn-gocart { background: var(--primary-color); color: white; } 
-        
+
     @media (max-width: 1024px) {
       .top-bar { padding: 10px 20px; }
       header.main-header { padding: 15px 20px; flex-direction: column; align-items: center; gap: 15px; }
       nav { justify-content: center; width: 100%; gap: 10px; }
-      nav a { font-size: 13px; padding: 6px 8px; }
-    }
-
-    @media (max-width: 640px) {
-      nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; }
-      nav a { font-size: 12px; padding: 6px 2px; }
-      .search-filter-bar { flex-direction: column; align-items: stretch; }
-      .search-input { max-width: 100%; }
     }
   </style>
 </head>
@@ -121,71 +97,53 @@
       <h3><i class="fa-solid fa-basket-shopping" style="color:var(--primary-color);"></i> 장바구니에 담았습니다!</h3>
       <p style="margin: 15px 0;">장바구니 페이지로 이동하시겠습니까?</p>
       <button class="modal-btn btn-continue" onclick="closeCartModal()">계속 쇼핑하기</button>
-      <button class="modal-btn btn-gocart" onclick="location.href='../cart'">장바구니 확인</button>
+      <button class="modal-btn btn-gocart" onclick="location.href='/cart'">장바구니 확인</button>
     </div>
   </div>
 
   <div class="top-bar">
       <% if (!user) { %>
-          <a href="../user/login" class="btn-login">로그인</a>
-          <a href="../user/register" class="btn-login">회원가입</a>
+          <a href="/user/login" class="btn-login">로그인</a>
+          <a href="/user/register" class="btn-login">회원가입</a>
       <% } else { %>
           <span><strong><%= user.name %></strong>님 환영합니다!</span>
-          <a href="../user/logout" class="btn-logout">로그아웃</a>
+          <a href="/user/logout" class="btn-logout">로그아웃</a>
       <% } %>
   </div>
 
   <header class="main-header">
-    <a href="../" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
+    <a href="/" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
     <nav>
-      <a href="./">홈</a>
-      <a href="./" style="color:var(--primary-color); font-weight: 700;">상품목록</a>
-      <a href="./cart">장바구니</a>
-      <a href="./board">고객센터</a>
-      <a href="./notice">공지사항</a>
-      <a href="./user/mypage">마이페이지</a>
-      <a href="./user/wishlist">위시리스트</a>
-      <a href="./user/orders">주문조회</a>
+      <a href="/">홈</a>
+      <a href="/products" style="color:var(--primary-color); font-weight: 700;">상품목록</a>
+      <a href="/cart">장바구니</a>
+      <a href="/board">고객센터</a>
+      <a href="/notice">공지사항</a>
+      <a href="/user/mypage">마이페이지</a>
+      <a href="/user/wishlist">위시리스트</a>
+      <a href="/user/orders">주문조회</a>
       <% if (typeof user !== 'undefined' && user && user.username === 'admin') { %>
-        <a href="./admin" class="admin-link">[관리자 모드]</a>
+        <a href="/admin" class="admin-link">[관리자 모드]</a>
       <% } %>
     </nav>
   </header>
 
   <div class="page-header">
-    <h1>전체 상품 목록</h1>
-    <p>지구를 위한 정직하고 깨끗한 제로웨이스트 상품들을 만나보세요.</p>
-    <div style="margin-top: 20px;">
-      <a href="../" class="back-link"><i class="fa-solid fa-arrow-left"></i> 메인으로 돌아가기</a>
-    </div>
+    <h1>MD 추천 상품 🌟</h1>
+    <p>이번 주, 에코라이프가 자신 있게 제안하는 베스트 아이템입니다.</p>
   </div>
 
   <main>
-    <form action="./all" method="GET" class="search-filter-bar">
-        <select name="category" class="filter-select">
-            <option value="">전체 카테고리</option>
-            <option value="kitchen" <%= (typeof query !== 'undefined' && query.category === 'kitchen') ? 'selected' : '' %>>주방용품</option>
-            <option value="bathroom" <%= (typeof query !== 'undefined' && query.category === 'bathroom') ? 'selected' : '' %>>욕실용품</option>
-            <option value="living" <%= (typeof query !== 'undefined' && query.category === 'living') ? 'selected' : '' %>>생활용품</option>
-        </select>
-        
-        <input type="text" name="keyword" class="search-input" placeholder="상품명을 검색해보세요" value="<%= (typeof query !== 'undefined') ? query.keyword : '' %>">
-        
-        <button type="submit" class="btn-search"><i class="fa-solid fa-magnifying-glass"></i> 검색</button>
-    </form>
-
     <div class="product-grid">
-      <% if (typeof products !== 'undefined' && products.length > 0) { %>
-        <% products.forEach(p => { %>
+      <% if (typeof featuredProducts !== 'undefined' && featuredProducts.length > 0) { %>
+        <% featuredProducts.forEach(p => { %>
           <div class="product-card">
             <div class="image-container">
-              <% if (p.is_featured === 1) { %>
-                <div class="featured-tag">
-                  <i class="fa-solid fa-star"></i> 추천
-                </div>
-              <% } %>
+              <div class="featured-tag">
+                <i class="fa-solid fa-star"></i> 추천
+              </div>
 
-              <img src="../images/<%= p.image_url || 'default.png' %>" alt="<%= p.name %>">
+              <img src="/images/<%= p.image_url || 'default.png' %>" alt="<%= p.name %>">
               
               <% 
                 let isWished = false;
@@ -194,7 +152,7 @@
                 }
               %>
 
-              <form action="../user/wishlist/toggle" method="POST" class="heart-wish-form">
+              <form action="/user/wishlist/toggle" method="POST" class="heart-wish-form">
                   <input type="hidden" name="productId" value="<%= p.id %>">
                   <button type="submit" class="heart-wish-btn <%= isWished ? 'active' : '' %>" title="찜하기">
                       <i class="<%= isWished ? 'fa-solid' : 'fa-regular' %> fa-heart"></i>
@@ -207,7 +165,7 @@
             <strong>₩<%= p.price.toLocaleString() %></strong>
 
             <div class="action-buttons">
-                <form action="../cart/add" method="POST" style="margin: 0;">
+                <form action="/cart/add" method="POST" style="margin: 0;">
                     <input type="hidden" name="productId" value="<%= p.id %>">
                     <button type="submit" class="cart-button">
                       <i class="fa-solid fa-cart-plus"></i> 장바구니 담기
@@ -217,11 +175,16 @@
           </div>
         <% }) %>
       <% } else { %>
-        <div class="empty-message">
-          <i class="fa-solid fa-circle-exclamation" style="font-size: 2rem; margin-bottom: 10px;"></i>
-          <p>조건에 맞는 상품이 없습니다.</p>
+        <div style="grid-column: 1 / -1; text-align: center; padding: 50px; color: var(--text-gray);">
+          현재 등록된 추천 상품이 없습니다.
         </div>
       <% } %>
+    </div>
+
+    <div class="view-all-container">
+      <a href="/products/all" class="view-all-btn">
+        더 많은 상품 전체보기 <i class="fa-solid fa-arrow-right"></i>
+      </a>
     </div>
   </main>
 
@@ -237,7 +200,7 @@
             const icon = btn.querySelector('i');
             const formData = new URLSearchParams(new FormData(this));
 
-            fetch('../user/wishlist/toggle', {
+            fetch('/user/wishlist/toggle', {
                 method: 'POST', body: formData, headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             })
             .then(res => res.json())
@@ -255,7 +218,7 @@
     });
 
     function closeCartModal() { document.getElementById('cartModal').classList.remove('show'); }
-    document.querySelectorAll('form[action="../cart/add"]').forEach(form => {
+    document.querySelectorAll('form[action="/cart/add"]').forEach(form => {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             fetch(this.action, {
@@ -268,14 +231,12 @@
             });
         });
     });
-  </script>
 
-  <script>
-      window.addEventListener('beforeunload', () => { sessionStorage.setItem('scrollPos', window.scrollY); });
-      window.addEventListener('pageshow', () => {
-          const scrollPos = sessionStorage.getItem('scrollPos');
-          if (scrollPos) { window.scrollTo(0, parseInt(scrollPos)); sessionStorage.removeItem('scrollPos'); }
-      });
+    window.addEventListener('beforeunload', () => { sessionStorage.setItem('scrollPos', window.scrollY); });
+    window.addEventListener('pageshow', () => {
+        const scrollPos = sessionStorage.getItem('scrollPos');
+        if (scrollPos) { window.scrollTo(0, parseInt(scrollPos)); sessionStorage.removeItem('scrollPos'); }
+    });
   </script>
 </body>
 </html>
