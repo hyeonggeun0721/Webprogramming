@@ -57,7 +57,7 @@ router.post('/add', (req, res) => {
 router.get('/', (req, res) => {
     const user = req.session.user;
     // 💡 [/user/login] -> [../user/login] 상대 경로 변경
-    if (!user) return res.redirect('../user/login');
+    if (!user) return res.redirect('./user/login');
 
     const query = `
     SELECT p.id, p.name, p.price, p.image_url, c.quantity
@@ -77,7 +77,7 @@ router.get('/', (req, res) => {
 // 장바구니 수량 조절
 router.post('/update', (req, res) => {
     // 💡 [/user/login] -> [../user/login] 상대 경로 변경
-    if (!req.session.user) return res.redirect('../user/login');
+    if (!req.session.user) return res.redirect('./user/login');
     
     const userId = req.session.user.id;
     const productId = req.body.productId;
@@ -110,7 +110,7 @@ router.post('/delete', (req, res) => {
     const { productId } = req.body;
 
     // 💡 [/user/login] -> [../user/login] 상대 경로 변경
-    if (!user) return res.redirect('../user/login');
+    if (!user) return res.redirect('./user/login');
 
     const deleteQuery = `DELETE FROM cart_items WHERE user_id = ? AND product_id = ?`;
     db.run(deleteQuery, [user.id, productId], (err) => {
@@ -124,7 +124,7 @@ router.post('/delete', (req, res) => {
 router.post('/checkout', (req, res) => {
     const user = req.session.user;
     // 💡 [/user/login] -> [../user/login] 상대 경로 변경
-    if (!user) return res.redirect('../user/login');
+    if (!user) return res.redirect('./user/login');
 
     const checkedIds = req.body.checkedIds;
 
