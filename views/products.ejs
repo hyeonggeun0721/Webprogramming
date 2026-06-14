@@ -103,27 +103,27 @@
 
   <div class="top-bar">
       <% if (!user) { %>
-          <a href="./user/login" class="btn-login">로그인</a>
-          <a href="./user/register" class="btn-login">회원가입</a>
+          <a href="../user/login" class="btn-login">로그인</a>
+          <a href="../user/register" class="btn-login">회원가입</a>
       <% } else { %>
           <span><strong><%= user.name %></strong>님 환영합니다!</span>
-          <a href="./user/logout" class="btn-logout">로그아웃</a>
+          <a href=".,/user/logout" class="btn-logout">로그아웃</a>
       <% } %>
   </div>
 
   <header class="main-header">
-    <a href="./" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
+    <a href="../" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
     <nav>
       <a href="./">홈</a>
-      <a href="./products" style="color:var(--primary-color); font-weight: 700;">상품목록</a>
-      <a href="./cart">장바구니</a>
-      <a href=".board">고객센터</a>
-      <a href="./notice">공지사항</a>
-      <a href="./user/mypage">마이페이지</a>
-      <a href="./user/wishlist">위시리스트</a>
-      <a href="./user/orders">주문조회</a>
+      <a href="../products" style="color:var(--primary-color); font-weight: 700;">상품목록</a>
+      <a href="../cart">장바구니</a>
+      <a href="..board">고객센터</a>
+      <a href="../notice">공지사항</a>
+      <a href="../user/mypage">마이페이지</a>
+      <a href="../user/wishlist">위시리스트</a>
+      <a href="../user/orders">주문조회</a>
       <% if (typeof user !== 'undefined' && user && user.username === 'admin') { %>
-        <a href="/admin" class="admin-link">[관리자 모드]</a>
+        <a href="../admin" class="admin-link">[관리자 모드]</a>
       <% } %>
     </nav>
   </header>
