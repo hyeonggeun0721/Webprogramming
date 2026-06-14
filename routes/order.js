@@ -10,7 +10,7 @@ const db = new sqlite3.Database(dbPath);
 router.post('/checkout', (req, res) => {
     const user = req.session.user;
     // 💡 [/user/login] -> [../user/login] 상위 상대 경로 변경
-    if (!user) return res.redirect('../user/login');
+    if (!user) return res.redirect('./user/login');
 
     const checkedIds = req.body.checkedIds;
 
@@ -48,7 +48,7 @@ router.post('/checkout', (req, res) => {
 router.post('/process', (req, res) => {
     const user = req.session.user;
     // 💡 [/user/login] -> [../user/login] 상위 상대 경로 변경
-    if (!user) return res.redirect('../user/login');
+    if (!user) return res.redirect('./user/login');
 
     const { checkedIds, email, phone, address, memo } = req.body;
 
@@ -164,7 +164,7 @@ router.post('/process', (req, res) => {
 router.get('/complete', (req, res) => {
     const user = req.session.user;
     // 💡 [/login] -> [../user/login] (또는 기존 연동 구조 맞춰 정확히 매칭되도록 ../user/login 지정)
-    if (!user) return res.redirect('../user/login');
+    if (!user) return res.redirect('./user/login');
     
     res.render('order_complete', { user });
 });
