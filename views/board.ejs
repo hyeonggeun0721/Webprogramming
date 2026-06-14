@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>고객센터 게시판 - ECO-LIFE Mall</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #064E3B; 
+      --primary-hover: #059669;
+      --accent-color: #facc15;
+      --text-dark: #1e293b;
+      --text-gray: #64748b;
+      --bg-light: #F8FAF9;
+      --bg-white: #ffffff;
+      --border-color: #E2E8F0; 
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 10px 40px;
+      background-color: var(--primary-color);
+      color: white;
+      font-size: 0.9em;
+    }
+
+    .top-bar span { margin-right: 15px; }
+
+    .top-bar a {
+      color: white;
+      text-decoration: none;
+      padding: 5px 12px;
+      border-radius: 4px;
+      margin-left: 8px;
+      transition: 0.2s;
+    }
+
+    .top-bar .btn-login { background-color: var(--accent-color); color: var(--primary-color); font-weight: 700; }
+    .top-bar .btn-logout { background-color: #ef4444; }
+
+    header.main-header {
+      background-color: var(--bg-white);
+      padding: 20px 40px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      position: sticky;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      top: 0;
+      z-index: 100;
+      flex-wrap: wrap; 
+      gap: 15px;
+    }
+
+    .logo {
+        font-family: 'Poppins', sans-serif;
+        font-size: 24px; font-weight: 700;
+        color: var(--primary-color);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    nav { 
+      display: flex; 
+      gap: 20px; 
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text-dark);
+      font-weight: 500;
+      padding: 8px 12px; 
+      border-radius: 6px;
+      transition: 0.2s;
+      white-space: nowrap; 
+    }
+
+    nav a:hover {
+      background-color: #f1f5f9;
+      color: var(--primary-color);
+    }
+
+    .admin-link { color: #ef4444 !important; font-weight: 700 !important; }
+
+    .page-header {
+      background: linear-gradient(135deg, rgba(6, 78, 59, 0.05) 0%, transparent 100%);
+      padding: 50px 20px; text-align: center; border-bottom: 1px solid var(--border-color);
+    }
+
+    .page-header h1 { 
+      font-family: 'Poppins', sans-serif; 
+      font-size: 32px; 
+      color: var(--primary-color); 
+      margin-bottom: 10px; 
+    }
+    .page-header p { color: var(--text-gray); margin-top: 10px; }
+
+    main { max-width: 1100px; width: 100%; margin: 40px auto; padding: 0 20px; flex: 1; }
+
+    .board-actions {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 15px; flex-wrap: wrap;
+    }
+    
+    .search-box { 
+      display: flex; 
+      gap: 10px; 
+      align-items: center; 
+      flex-wrap: wrap; 
+    }
+    
+    .form-select {
+      height: 48px;
+      padding: 0 40px 0 16px; 
+      border: 1px solid var(--border-color); 
+      border-radius: 10px; 
+      outline: none; 
+      font-size: 15px; 
+      font-weight: 500;
+      color: var(--text-dark); 
+      background-color: var(--bg-white); 
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 16px;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    }
+    
+    .form-select:hover {
+      border-color: var(--primary-hover);
+      background-color: #f8fafc;
+    }
+
+    .form-select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(6, 78, 59, 0.1);
+    }
+    
+    .search-box input {
+      height: 48px;
+      padding: 0 16px; 
+      border: 1px solid var(--border-color); 
+      border-radius: 10px; 
+      width: 280px; 
+      font-size: 15px;
+      color: var(--text-dark);
+      background-color: #fdfdfd;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    
+    .search-box input:focus {
+      border-color: var(--primary-color);
+      background-color: var(--bg-white);
+      box-shadow: 0 0 0 4px rgba(6, 78, 59, 0.1);
+    }
+    
+    .btn-search {
+      height: 48px;
+      width: 52px;
+      background: var(--primary-color); 
+      color: white; 
+      border: none; 
+      border-radius: 10px; 
+      cursor: pointer; 
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .btn-search:hover {
+      background-color: var(--primary-hover);
+    }
+    
+    .btn-write {
+      height: 48px;
+      padding: 0 25px; 
+      background: var(--accent-color); 
+      color: var(--primary-color);
+      text-decoration: none; 
+      border-radius: 10px; 
+      font-weight: 700; 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 8px;
+      transition: all 0.2s; 
+      font-size: 15px;
+    }
+    .btn-write:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 4px 12px rgba(250, 204, 21, 0.3);
+    }
+
+    .table-container { width: 100%; overflow-x: auto; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+
+    .board-table {
+      width: 100%; border-collapse: collapse; background: var(--bg-white); min-width: 750px; 
+    }
+    .board-table th {
+      background: #f1f5f9; color: var(--text-gray); font-weight: 700; padding: 18px; border-bottom: 2px solid var(--border-color);
+    }
+    .board-table td { padding: 18px; border-bottom: 1px solid var(--border-color); }
+    .board-table tr:last-child td { border-bottom: none; }
+    .board-table tr:hover { background-color: #f8fafc; }
+
+    .post-title { color: var(--text-dark); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; }
+    .post-title:hover { color: var(--primary-color); }
+    .reply-icon { color: var(--primary-hover); margin-left: 10px; font-size: 0.9em; }
+
+    .author-badge {
+      padding: 4px 10px; background: #f1f5f9; border-radius: 20px; font-size: 0.85em; color: var(--text-gray);
+    }
+
+    .category-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background: #f0fdf4;
+      color: var(--primary-color);
+      border: 1px solid rgba(6, 78, 59, 0.12);
+      border-radius: 6px;
+      font-size: 0.8em;
+      font-weight: 600;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.8em;
+      font-weight: 600;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+    .status-pending {
+      background-color: #fee2e2;
+      color: #991b1b;
+      border: 1px solid rgba(153, 27, 27, 0.15);
+    }
+    .status-completed {
+      background-color: #dcfce7;
+      color: #166534;
+      border: 1px solid rgba(22, 101, 52, 0.15);
+    }
+
+    .action-links { display: flex; gap: 10px; justify-content: center; }
+    .action-links a { font-size: 0.85em; color: var(--primary-color); text-decoration: none; }
+    .action-links .disabled { color: #cbd5e1; cursor: not-allowed; pointer-events: none; }
+    .action-links .btn-delete { color: #ef4444; }
+
+    .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 40px; flex-wrap: wrap; }
+    .pagination a, .pagination strong {
+      padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border-color); text-decoration: none; color: var(--text-dark);
+    }
+    .pagination strong { background: var(--primary-color); color: white; border-color: var(--primary-color); }
+    .pagination a:hover { background: #f1f5f9; }
+
+    footer { text-align: center; padding: 40px 20px; background: var(--primary-color); color: rgba(255,255,255,0.6); font-size: 14px; margin-top: auto; }
+
+    .highlight {
+      background-color: #fef08a;
+      color: #c2410c;
+      font-weight: bold;
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+
+    @media (max-width: 1024px) {
+      .top-bar {
+        padding: 10px 20px;
+      }
+
+      header.main-header {
+        padding: 15px 20px;
+        flex-direction: column; 
+        align-items: center;
+        gap: 15px;
+      }
+
+      nav {
+        justify-content: center;
+        width: 100%;
+        gap: 10px;
+      }
+      
+      nav a {
+        font-size: 13px;
+        padding: 6px 8px;
+      }
+
+      .board-actions {
+        justify-content: center; 
+      }
+
+      .search-box {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 640px) {
+      nav {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); 
+        gap: 8px;
+        text-align: center;
+      }
+      
+      nav a {
+        font-size: 12px;
+        padding: 6px 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <% if (!user) { %>
+        <a href="../login" class="btn-login">로그인</a>
+        <a href="../user/register" class="btn-login">회원가입</a>
+    <% } else { %>
+        <span><strong><%= user.name %></strong>님 환영합니다!</span>
+        <a href="../user/logout" class="btn-logout">로그아웃</a>
+    <% } %>
+  </div>
+
+  <header class="main-header">
+    <a href="../" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
+    <nav>
+      <a href="../">홈</a>
+      <a href="../products">상품목록</a>
+      <a href="../cart">장바구니</a>
+      <a href="./" style="color: var(--primary-color); font-weight: 700;">고객센터</a>
+      <a href="../notice">공지사항</a>
+      <a href="../user/mypage">마이페이지</a>
+      <a href="../user/wishlist">위시리스트</a>
+      <a href="../user/orders">주문조회</a>
+      
+      <% if (typeof user !== 'undefined' && user && user.username === 'admin') { %>
+        <a href="../admin" class="admin-link">[관리자 모드]</a>
+      <% } %>
+    </nav>
+  </header>
+
+  <div class="page-header">
+    <h1>고객센터</h1>
+    <p>궁금하신 점이나 불편한 사항을 남겨주시면 정성껏 답변해 드립니다.</p>
+  </div>
+
+  <main>
+    <div class="board-actions" style="margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+      
+      <form action="./" method="GET" class="search-box" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+        
+        <select name="category" class="form-select">
+            <option value="전체" <%= (typeof currentCategory !== 'undefined' && currentCategory === '전체') ? 'selected' : '' %>>전체 주제</option>
+            <option value="배송문의" <%= (typeof currentCategory !== 'undefined' && currentCategory === '배송문의') ? 'selected' : '' %>>🚚 배송문의</option>
+            <option value="제품문의" <%= (typeof currentCategory !== 'undefined' && currentCategory === '제품문의') ? 'selected' : '' %>>🍎 제품문의</option>
+            <option value="반품/환불" <%= (typeof currentCategory !== 'undefined' && currentCategory === '반품/환불') ? 'selected' : '' %>>🔄 반품/환불</option>
+            <option value="기타문의" <%= (typeof currentCategory !== 'undefined' && currentCategory === '기타문의') ? 'selected' : '' %>>💬 기타문의</option>
+        </select>
+
+        <input type="text" name="search" placeholder="검색어를 입력하세요" value="<%= typeof searchKeyword !== 'undefined' ? searchKeyword : '' %>" style="width: 280px;">
+        
+        <button type="submit" class="btn-search"><i class="fa-solid fa-magnifying-glass"></i></button>
+        
+        <% if (typeof searchKeyword !== 'undefined' && searchKeyword) { %>
+          <a href="./" style="font-size:0.9em; color:var(--text-gray); white-space: nowrap; margin-left: 5px;">[초기화]</a>
+        <% } %>
+      </form>
+
+      <a href="./new" class="btn-write" style="white-space: nowrap;">
+        <i class="fa-solid fa-pen-to-square"></i> 문의하기
+      </a>
+
+    </div>
+
+    <div class="table-container">
+      <table class="board-table">
+        <thead>
+          <tr>
+            <th style="text-align: left; padding-left: 30px;">제목</th>
+            <th width="150">작성자</th>
+            <th width="180">작성일</th>
+            <th width="120">관리</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (posts.length === 0) { %>
+            <tr>
+              <td colspan="4" style="text-align:center; padding: 50px; color:var(--text-gray);">등록된 게시글이 없습니다.</td>
+            </tr>
+          <% } else { %>
+            <% posts.forEach((post, index) => { %>
+              <tr>
+                <td style="padding-left: 30px;">
+                  <div style="margin-left:<%= post.parent_id ? '25px' : '0' %>; display: flex; align-items: center;">
+                    
+                    <% if (post.parent_id) { %>
+                      <i class="fa-solid fa-share reply-icon" style="transform: rotate(180deg); margin-right: 8px;"></i>
+                    <% } %>
+  
+                    <span class="category-badge"><%= post.category || '기타' %></span>
+  
+                    <% if (!post.parent_id) { %>
+                      <% if (post.status === '답변 완료') { %>
+                        <span class="status-badge status-completed">답변 완료</span>
+                      <% } else { %>
+                        <span class="status-badge status-pending">답변 대기</span>
+                      <% } %>
+                    <% } %>
+  
+                    <a href="./view/<%= post.id %>" class="post-title" style="display: inline;">
+                      <% 
+                        let displayTitle = post.title;
+                        if (typeof searchKeyword !== 'undefined' && searchKeyword) {
+                          const regex = new RegExp(`(${searchKeyword})`, 'gi');
+                          displayTitle = displayTitle.replace(regex, `<mark class="highlight">$1</mark>`);
+                        }
+                      %>
+                      <%- displayTitle %> 
+                    </a>
+                  </div>
+                </td>
+                <td style="text-align:center;">
+                  <span class="author-badge"><%= post.author %></span>
+                </td>
+                <td style="text-align:center; color: var(--text-gray); font-size: 0.9em;">
+                  <% 
+                    const dateObj = new Date(post.created_at);
+                    const datePart = dateObj.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' });
+                    const timePart = dateObj.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
+                  %>
+                  <%= datePart %> <%= timePart %>
+                </td>
+                <td>
+                  <%
+                    const isAuthor = user && user.username === post.author;
+                    const isAdmin = user && user.username === 'admin';
+                  %>
+                  <div class="action-links">
+                    <% if (isAuthor) { %>
+                      <a href="./edit/<%= post.id %>" title="수정"><i class="fa-solid fa-pen-nib"></i></a>
+                    <% } else { %>
+                      <span class="disabled" title="본인만 수정 가능합니다." style="color: #cbd5e1; cursor: not-allowed;"><i class="fa-solid fa-pen-nib"></i></span>
+                    <% } %>
+  
+                    <span style="color:#e2e8f0">|</span>
+  
+                    <% if (isAuthor || isAdmin) { %>
+                      <a href="./delete/<%= post.id %>" class="btn-delete" title="삭제" onclick="return confirm('정말 삭제하시겠습니까?');"><i class="fa-solid fa-trash-can"></i></a>
+                    <% } else { %>
+                      <span class="disabled" style="color: #cbd5e1; cursor: not-allowed;"><i class="fa-solid fa-trash-can"></i></span>
+                    <% } %>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination" style="text-align: center; margin-top: 30px;">
+        <% 
+          let queryStr = '';
+          if (typeof currentCategory !== 'undefined' && currentCategory !== '전체') queryStr += '&category=' + encodeURIComponent(currentCategory);
+          if (typeof searchKeyword !== 'undefined' && searchKeyword) queryStr += '&search=' + encodeURIComponent(searchKeyword);
+          if (typeof currentStatus !== 'undefined' && currentStatus) queryStr += '&status=' + encodeURIComponent(currentStatus);
+        %>
+
+        <% if (currentPage > 1) { %>
+            <a href="./?page=<%= currentPage - 1 %><%= queryStr %>" style="padding: 8px 12px; border: 1px solid #e2e8f0; text-decoration: none; color: #1e293b; border-radius: 4px;">이전</a>
+        <% } %>
+
+        <% for(let i = 1; i <= totalPages; i++) { %>
+            <a href="./?page=<%= i %><%= queryStr %>" 
+              style="padding: 8px 12px; margin: 0 5px; border: 1px solid #e2e8f0; text-decoration: none; border-radius: 4px; <%= currentPage === i ? 'background-color: #064E3B; color: white;' : 'color: #1e293b;' %>">
+              <%= i %>
+            </a>
+        <% } %>
+
+        <% if (currentPage < totalPages) { %>
+            <a href="./?page=<%= currentPage + 1 %><%= queryStr %>" style="padding: 8px 12px; border: 1px solid #e2e8f0; text-decoration: none; color: #1e293b; border-radius: 4px;">다음</a>
+        <% } %>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Premium ECO-LIFE Mall. Customer Service System.</p>
+  </footer>
+
+</body>
+</html>

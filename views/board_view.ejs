@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시글 상세 - ECO-LIFE Mall</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #064E3B; 
+      --primary-hover: #059669;
+      --accent-color: #facc15;
+      --text-dark: #1e293b;
+      --text-gray: #64748b;
+      --bg-light: #F8FAF9;
+      --bg-white: #ffffff;
+      --border-color: #E2E8F0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 10px 40px;
+      background-color: var(--primary-color);
+      color: white;
+      font-size: 0.9em;
+    }
+
+    .top-bar span { margin-right: 15px; }
+    .top-bar a {
+      color: white; text-decoration: none; padding: 5px 12px; border-radius: 4px; margin-left: 8px; transition: 0.2s;
+    }
+    .top-bar .btn-login { background-color: var(--accent-color); color: var(--primary-color); font-weight: 700; }
+    .top-bar .btn-logout { background-color: #ef4444; }
+
+    header.main-header {
+      background-color: var(--bg-white); padding: 20px 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; display: flex; justify-content: space-between; align-items: center; top: 0; z-index: 100; flex-wrap: wrap; gap: 15px;
+    }
+
+    .logo {
+        font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 700; color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 10px;
+    }
+
+    nav { display: flex; gap: 20px; flex-wrap: wrap; }
+    nav a {
+      text-decoration: none; color: var(--text-dark); font-weight: 500; padding: 8px 12px; border-radius: 6px; transition: 0.2s; white-space: nowrap;
+    }
+    nav a:hover { background-color: #f1f5f9; color: var(--primary-color); }
+    .admin-link { color: #ef4444 !important; font-weight: 700 !important; }
+
+    .page-header {
+      background: linear-gradient(135deg, rgba(6, 78, 59, 0.05) 0%, transparent 100%); padding: 50px 20px; text-align: center; border-bottom: 1px solid var(--border-color);
+    }
+    .page-header h1 { font-family: 'Poppins', sans-serif; font-size: 32px; color: var(--primary-color); margin-bottom: 10px; }
+    .page-header p { color: var(--text-gray); }
+    
+    main { flex: 1; width: 100%; max-width: 900px; margin: 40px auto 80px; padding: 0 20px; }
+
+    .post-container {
+      background: var(--bg-white); border-radius: 16px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); border: 1px solid var(--border-color); overflow: hidden;
+    }
+
+    .post-header { padding: 40px 50px 25px; border-bottom: 1px solid var(--border-color); }
+    .post-header h2 { font-size: 28px; color: var(--text-dark); margin-bottom: 15px; line-height: 1.4; word-break: break-all; }
+
+    .post-meta { display: flex; align-items: center; gap: 20px; color: var(--text-gray); font-size: 14px; flex-wrap: wrap; }
+    .post-meta span { display: flex; align-items: center; gap: 6px; }
+
+    .post-content { padding: 50px; min-height: 250px; font-size: 16px; color: var(--text-dark); line-height: 1.8; white-space: pre-wrap; word-break: break-all; }
+
+    .post-attachments { padding: 25px 50px; background-color: #f8fafc; border-top: 1px solid var(--border-color); }
+    .post-attachments h3 { font-size: 15px; color: var(--text-dark); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+    .attachment-list { list-style: none; display: flex; flex-wrap: wrap; gap: 10px; }
+    .file-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--bg-white); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 50px; text-decoration: none; color: var(--primary-color); font-size: 14px; font-weight: 500; transition: all 0.2s; }
+    .file-badge:hover { background: var(--primary-color); color: var(--bg-white); border-color: var(--primary-color); }
+
+    .post-actions { padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; background-color: var(--bg-white); border-top: 1px solid var(--border-color); flex-wrap: wrap; gap: 15px; }
+    .action-group { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 18px; border-radius: 6px; font-weight: 600; font-size: 14px; text-decoration: none; cursor: pointer; transition: all 0.2s; border: 1px solid transparent; white-space: nowrap; }
+
+    .btn-list { background-color: #f1f5f9; color: var(--text-dark); border-color: var(--border-color); }
+    .btn-list:hover { background-color: #e2e8f0; }
+    .btn-reply { background-color: var(--primary-color); color: var(--bg-white); }
+    .btn-reply:hover { background-color: var(--primary-hover); }
+    .btn-edit { background-color: var(--bg-white); color: #2563eb; border-color: #2563eb; }
+    .btn-edit:hover { background-color: #eff6ff; }
+    .btn-delete { background-color: var(--bg-white); color: #ef4444; border-color: #ef4444; }
+    .btn-delete:hover { background-color: #fef2f2; }
+    .btn.disabled { color: #94a3b8; background-color: #f8fafc; border-color: #e2e8f0; opacity: 0.7; pointer-events: none; cursor: not-allowed; }
+
+    /* 진짜 댓글 형태의 콤팩트한 UI 적용 */
+    .replies-section {
+      background-color: var(--bg-white);
+      border-top: 4px solid #f1f5f9;
+      padding: 30px 50px;
+    }
+    .replies-section h4 {
+      font-size: 15px;
+      color: var(--text-dark);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .reply-item {
+      padding: 15px 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .reply-item:last-child { 
+      border-bottom: none; 
+      padding-bottom: 0; 
+    }
+    .reply-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+    .reply-author { font-weight: 700; color: var(--text-dark); font-size: 14px; }
+    .reply-date { font-size: 12px; color: var(--text-gray); }
+    
+    .reply-content { 
+      font-size: 14px; 
+      color: var(--text-dark); 
+      white-space: pre-wrap; 
+      line-height: 1.5; 
+      word-break: break-all; 
+    }
+    
+    .reply-actions {
+      margin-top: 8px;
+      display: flex;
+      gap: 12px;
+    }
+    .btn-reply-action {
+      font-size: 12px; 
+      text-decoration: none; 
+      color: var(--text-gray); 
+      font-weight: 500;
+      background: none;
+      border: none;
+      padding: 0;
+      transition: color 0.2s;
+    }
+    .btn-reply-action:hover { color: var(--text-dark); text-decoration: underline; }
+    .btn-reply-delete:hover { color: #ef4444; }
+
+    /* 미디어 쿼리 */
+    @media (max-width: 1024px) {
+      .top-bar { padding: 10px 20px; }
+      header.main-header { padding: 15px 20px; flex-direction: column; align-items: center; gap: 15px; }
+      nav { justify-content: center; width: 100%; gap: 10px; }
+      nav a { font-size: 13px; padding: 6px 8px; }
+    }
+
+    @media (max-width: 640px) {
+      nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; }
+      nav a { font-size: 12px; padding: 6px 2px; }
+      
+      .post-header { padding: 30px 20px 20px; }
+      .post-content { padding: 30px 20px; min-height: 150px; }
+      .post-attachments { padding: 20px; }
+      .post-actions { padding: 20px; flex-direction: column-reverse; gap: 15px; }
+      .action-group { justify-content: stretch; width: 100%; }
+      .btn { flex: 1; text-align: center; }
+      .post-actions > div:first-child { width: 100%; }
+      .btn-list { width: 100%; }
+
+      .replies-section { padding: 20px; }
+      .reply-item { padding: 12px 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <% if (typeof user === 'undefined' || !user) { %>
+        <a href="../../login" class="btn-login">로그인</a>
+        <a href="../../user/register" class="btn-login">회원가입</a>
+    <% } else { %>
+        <span><strong><%= user.name %></strong>님 환영합니다!</span>
+        <a href="../../user/logout" class="btn-logout">로그아웃</a>
+    <% } %>
+  </div>
+
+  <header class="main-header">
+    <a href="../../" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
+    <nav>
+      <a href="../../">홈</a>
+      <a href="../../products">상품목록</a>
+      <a href="../../cart">장바구니</a>
+      <a href="../" style="color: var(--primary-color); font-weight: 700;">고객센터</a>
+      <a href="../../notice">공지사항</a>
+      <a href="../../user/mypage">마이페이지</a>
+      <a href="../../user/wishlist">위시리스트</a>
+      <a href="../../user/orders">주문조회</a>
+      <% if (typeof user !== 'undefined' && user && user.username === 'admin') { %>
+        <a href="../../admin" class="admin-link">[관리자 모드]</a>
+      <% } %>
+    </nav>
+  </header>
+
+  <div class="page-header">
+    <h1><i class="fa-regular fa-comment-dots"></i> 게시글 상세</h1>
+    <p>고객님께서 남겨주신 문의 사항의 상세 내용입니다.</p>
+  </div>
+
+  <main>
+    <article class="post-container">
+      
+      <div class="post-header">
+        <h2><%= post.title %></h2>
+        <div class="post-meta">
+          <span><i class="fa-solid fa-user"></i> <%= post.author %></span>
+          <span><i class="fa-regular fa-clock"></i> <%= post.created_at %></span>
+        </div>
+      </div>
+
+      <div class="post-content"><%= post.content %></div>
+
+      <% if (typeof files !== 'undefined' && files.length > 0) { %>
+        <div class="post-attachments">
+          <h3><i class="fa-solid fa-paperclip"></i> 첨부파일 (<%= files.length %>)</h3>
+          <ul class="attachment-list">
+              <% files.forEach(file => { %>
+                  <li>
+                    <a href="../../uploads/<%= file.filename %>" download class="file-badge">
+                      <i class="fa-solid fa-download"></i> <%= file.filename %>
+                    </a>
+                  </li>
+              <% }) %>
+          </ul>
+        </div>
+      <% } %>
+
+      <div class="post-actions">
+        <div>
+          <a href="../" class="btn btn-list"><i class="fa-solid fa-list"></i> 목록</a>
+        </div>
+
+        <div class="action-group">
+          <a href="../reply/<%= post.id %>" class="btn btn-reply"><i class="fa-solid fa-reply"></i> 답글</a>
+
+          <% const isAuthor = typeof user !== 'undefined' && user && user.username === post.author; %>
+          <% const isAdmin = typeof user !== 'undefined' && user && user.username === 'admin'; %>
+          <% const isAnon = post.author === '익명'; %>
+
+          <% if (isAuthor) { %>
+              <a href="../edit/<%= post.id %>" class="btn btn-edit"><i class="fa-solid fa-pen-nib"></i> 수정</a>
+          <% } %>
+
+          <% if (isAuthor || (isAnon && isAdmin) || isAdmin) { %>
+              <a href="../delete/<%= post.id %>" class="btn btn-delete" onclick="return confirm('이 게시글을 정말 삭제하시겠습니까?');"><i class="fa-regular fa-trash-can"></i> 삭제</a>
+          <% } else { %>
+              <span class="btn btn-delete disabled"><i class="fa-regular fa-trash-can"></i> 삭제</span>
+          <% } %>
+        </div>
+      </div>
+
+      <% if (typeof replies !== 'undefined' && replies.length > 0) { %>
+        <div class="replies-section">
+          <h4><i class="fa-regular fa-comments"></i> 등록된 답변 (<%= replies.length %>)</h4>
+          
+          <% replies.forEach(reply => { %>
+            <div class="reply-item">
+              <div class="reply-header">
+                <span class="reply-author"><%= reply.author %></span>
+                <span class="reply-date"><%= reply.created_at %></span>
+              </div>
+              <div class="reply-content"><%= reply.content %></div>
+
+              <% const isReplyAuthor = typeof user !== 'undefined' && user && user.username === reply.author; %>
+              <% const isReplyAnon = reply.author === '익명'; %>
+              
+              <% if (isReplyAuthor || (isReplyAnon && isAdmin) || isAdmin) { %>
+                <div class="reply-actions">
+                  <% if (isReplyAuthor) { %>
+                    <a href="../edit/<%= reply.id %>" class="btn-reply-action">수정</a>
+                  <% } %>
+                  <a href="../delete/<%= reply.id %>" class="btn-reply-action btn-reply-delete" onclick="return confirm('이 답변을 삭제하시겠습니까?');">삭제</a>
+                </div>
+              <% } %>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+
+    </article>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Premium ECO-LIFE Mall. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

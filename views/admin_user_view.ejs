@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원 상세 정보 - ECO-LIFE Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root { --primary-color: #064E3B; --primary-hover: #059669; --bg-light: #F8FAF9; --text-dark: #1e293b; --border-color: #E2E8F0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; }
+    body { background-color: var(--bg-light); color: var(--text-dark); display: flex; flex-direction: column; min-height: 100vh; }
+    
+    header.main-header { background-color: #fff; padding: 20px 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-bottom: 1px solid var(--border-color); }
+    .logo { font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 700; color: var(--primary-color); text-decoration: none; }
+    
+    main { flex: 1; width: 100%; max-width: 800px; margin: 50px auto; padding: 0 20px; }
+    
+    .detail-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border-color); overflow: hidden; }
+    .card-header { background-color: var(--primary-color); color: white; padding: 20px 30px; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+    
+    .info-list { padding: 30px; list-style: none; }
+    .info-item { display: flex; padding: 15px 0; border-bottom: 1px solid var(--border-color); }
+    .info-item:last-child { border-bottom: none; }
+    .info-label { width: 150px; font-weight: 600; color: #64748b; }
+    .info-value { flex: 1; font-weight: 500; color: var(--text-dark); }
+    
+    .btn-container { padding: 20px 30px; background-color: #f8fafc; text-align: center; border-top: 1px solid var(--border-color); }
+    .btn-back { background-color: var(--text-dark); color: white; padding: 10px 25px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: 0.2s; display: inline-block; }
+    .btn-back:hover { background-color: #0f172a; }
+  </style>
+</head>
+<body>
+
+  <header class="main-header">
+    <a href="../../../" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE Admin</a>
+  </header>
+
+  <main>
+    <div class="detail-card">
+      <div class="card-header">
+        <i class="fa-solid fa-address-card"></i> 회원 상세 정보
+      </div>
+      
+      <ul class="info-list">
+        <li class="info-item">
+          <div class="info-label">회원 고유번호</div>
+          <div class="info-value">#<%= targetUser.id %></div>
+        </li>
+        <li class="info-item">
+          <div class="info-label">아이디</div>
+          <div class="info-value"><%= targetUser.username %></div>
+        </li>
+        <li class="info-item">
+          <div class="info-label">이름</div>
+          <div class="info-value"><%= targetUser.name %></div>
+        </li>
+        <li class="info-item">
+          <div class="info-label">이메일</div>
+          <div class="info-value"><%= targetUser.email || '-' %></div>
+        </li>
+        <li class="info-item">
+          <div class="info-label">전화번호</div>
+          <div class="info-value"><%= targetUser.phone || '-' %></div>
+        </li>
+        <li class="info-item">
+          <div class="info-label">주소</div>
+          <div class="info-value"><%= targetUser.address || '-' %></div>
+        </li>
+      </ul>
+
+      <div class="btn-container">
+        <a href="../../users" class="btn-back"><i class="fa-solid fa-list"></i> 목록으로 돌아가기</a>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>

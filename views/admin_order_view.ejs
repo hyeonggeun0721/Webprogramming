@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>주문 상세 정보 - ECO-LIFE Admin</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #064E3B; 
+      --primary-hover: #059669;
+      --accent-color: #facc15;
+      --text-dark: #1e293b;
+      --text-gray: #64748b;
+      --bg-light: #F8FAF9;
+      --bg-white: #ffffff;
+      --border-color: #E2E8F0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 10px 40px;
+      background-color: var(--primary-color);
+      color: white;
+      font-size: 0.9em;
+    }
+
+    .top-bar span { margin-right: 15px; }
+
+    .top-bar a {
+      color: white;
+      text-decoration: none;
+      padding: 5px 12px;
+      border-radius: 4px;
+      margin-left: 8px;
+      transition: 0.2s;
+    }
+
+    .top-bar .btn-login { background-color: var(--accent-color); color: var(--primary-color); font-weight: 700; }
+    .top-bar .btn-logout { background-color: #ef4444; }
+
+    header.main-header {
+      background-color: var(--bg-white);
+      padding: 20px 40px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      position: sticky;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+        font-family: 'Poppins', sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--primary-color);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    nav { display: flex; gap: 20px; }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text-dark);
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: 0.2s;
+    }
+
+    nav a:hover {
+      background-color: #f1f5f9;
+      color: var(--primary-color);
+    }
+
+    .admin-link { color: #ef4444 !important; font-weight: 700 !important; }
+
+    /* =========================================
+       [본문 디자인: 주문 상세 뷰]
+       ========================================= */
+    main.admin-main {
+      flex: 1;
+      width: 100%;
+      max-width: 900px;
+      margin: 40px auto 80px;
+      padding: 0 20px;
+    }
+
+    .page-header {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--primary-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .page-header h1 {
+      font-size: 28px;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-back {
+      background-color: #f1f5f9;
+      color: var(--text-dark);
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: 0.2s;
+      border: 1px solid var(--border-color);
+    }
+    .btn-back:hover { background-color: #e2e8f0; }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .admin-card {
+      background-color: var(--bg-white);
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+      border: 1px solid var(--border-color);
+    }
+
+    /* 한 줄을 다 차지하는 카드 (상태 변경 등) */
+    .admin-card.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .admin-card h3 {
+      font-size: 18px;
+      color: var(--text-dark);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-list {
+      list-style: none;
+    }
+
+    .info-list li {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 15px;
+    }
+
+    .info-list li:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      color: var(--text-gray);
+      font-weight: 500;
+    }
+
+    .info-value {
+      color: var(--text-dark);
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .status-form {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      background-color: #f8fafc;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px dashed #cbd5e1;
+    }
+
+    .form-select {
+      flex: 1;
+      padding: 12px 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .btn-action {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .btn-action:hover { background-color: var(--primary-hover); }
+
+    footer { text-align: center; padding: 30px; background-color: var(--primary-color); color: rgba(255,255,255,0.7); font-size: 14px; margin-top: auto; }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <% if (typeof user === 'undefined' || !user) { %>
+        <a href="../../../login" class="btn-login">로그인</a>
+        <a href="../../../user/register" class="btn-login">회원가입</a>
+    <% } else { %>
+        <span><strong><%= user.name %></strong>님 환영합니다!</span>
+        <a href="../../../user/logout" class="btn-logout">로그아웃</a>
+    <% } %>
+  </div>
+
+  <header class="main-header">
+    <a href="../../../" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
+    <nav>
+      <a href="../../../">홈</a>
+      <a href="../../../products">상품목록</a>
+      <a href="../../../cart">장바구니</a>
+      <a href="../../../board">고객센터</a>
+      <a href="../../../notice">공지사항</a>
+      <a href="../../../user/mypage">마이페이지</a>
+      <a href="../../../user/wishlist">위시리스트</a>
+      <a href="../../../user/orders">주문조회</a>
+      <% if (typeof user !== 'undefined' && user && user.username === 'admin') { %>
+        <a href="../../" class="admin-link" style="color: var(--primary-color); font-weight: 700;">[관리자 모드]</a>
+      <% } %>
+    </nav>
+  </header>
+
+  <main class="admin-main">
+    
+    <div class="page-header">
+      <h1><i class="fa-solid fa-receipt"></i> 주문 상세 정보</h1>
+      <a href="../../" class="btn-back">대시보드로 돌아가기</a>
+    </div>
+
+    <div class="detail-grid">
+      
+      <div class="admin-card">
+        <h3><i class="fa-solid fa-user"></i> 고객 정보</h3>
+        <ul class="info-list">
+          <li>
+            <span class="info-label">회원번호</span>
+            <span class="info-value">#<%= order.user_id %></span>
+          </li>
+          <li>
+            <span class="info-label">아이디</span>
+            <span class="info-value"><%= order.username || '알 수 없음' %></span>
+          </li>
+          <li>
+            <span class="info-label">이름</span>
+            <span class="info-value"><%= order.name || '알 수 없음' %></span>
+          </li>
+          <li>
+            <span class="info-label">연락처</span>
+            <span class="info-value"><%= order.phone || '010-0000-0000' %></span>
+          </li>
+          <li>
+            <span class="info-label">배송지 주소</span>
+            <span class="info-value" style="text-align: right; max-width: 60%;"><%= order.address || '고객 주소 정보' %></span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="admin-card">
+        <h3><i class="fa-solid fa-box"></i> 주문 내역</h3>
+        <ul class="info-list">
+          <li>
+            <span class="info-label">주문번호</span>
+            <span class="info-value">#<%= order.id %></span>
+          </li>
+          <li>
+            <span class="info-label">상품명</span>
+            <span class="info-value" style="color: var(--primary-color);"><%= order.product_name %></span>
+          </li>
+          <li>
+            <span class="info-label">주문수량</span>
+            <span class="info-value"><%= order.quantity || 1 %>개</span>
+          </li>
+          <li>
+            <span class="info-label">결제 금액</span>
+            <span class="info-value" style="font-size: 18px;"><%= order.price.toLocaleString() %>원</span>
+          </li>
+          <li>
+            <span class="info-label">주문 일자</span>
+            <span class="info-value" style="font-weight: 400;"><%= order.order_date %></span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="admin-card full-width">
+        <h3><i class="fa-solid fa-truck-fast"></i> 배송 및 상태 관리</h3>
+        <p style="color: var(--text-gray); font-size: 14px; margin-bottom: 15px;">해당 주문의 처리 상태를 업데이트합니다.</p>
+        
+        <form action="../../order/status" method="POST" class="status-form">
+          <input type="hidden" name="orderId" value="<%= order.id %>">
+          <input type="hidden" name="redirect" value="../../order/view/<%= order.id %>">
+          
+          <select name="status" class="form-select">
+            <option value="결제완료" <%= order.status === '결제완료' ? 'selected' : '' %>>결제완료 (상품 준비 중)</option>
+            <option value="배송중" <%= order.status === '배송중' ? 'selected' : '' %>>배송중 (발송 완료)</option>
+            <option value="배송완료" <%= order.status === '배송완료' ? 'selected' : '' %>>배송완료 (고객 수령)</option>
+            <option value="주문취소" <%= order.status === '주문취소' ? 'selected' : '' %>>주문취소 (환불 처리)</option>
+          </select>
+          
+          <button type="submit" class="btn-action">상태 업데이트 적용</button>
+        </form>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Premium ECO-LIFE Mall. Admin Console.</p>
+  </footer>
+
+</body>
+</html>

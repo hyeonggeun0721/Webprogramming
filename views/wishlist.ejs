@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>나의 위시리스트 - ECO-LIFE Mall</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-emerald: #064E3B;
+      --primary-hover: #059669;
+      --accent-gold: #FACC15;
+      --bg-cream: #F8FAF9;
+      --text-slate: #334155;
+      --text-light: #64748B;
+      --white: #ffffff;
+      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 10px 25px rgba(0,0,0,0.05);
+      --border-color: #E2E8F0;
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-cream);
+      color: var(--text-slate);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Top Utility Bar */
+    .top-bar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 10px 40px;
+      background-color: var(--primary-emerald);
+      color: white;
+      font-size: 0.9em;
+    }
+
+    .top-bar span { margin-right: 15px; }
+
+    .top-bar a {
+        color: white;
+        text-decoration: none;
+        padding: 5px 12px;
+        border-radius: 4px;
+        margin-left: 8px;
+        transition: 0.2s;
+    }
+
+    .top-bar .btn-login { background-color: var(--accent-gold); color: var(--primary-emerald); font-weight: 700; }
+    .top-bar .btn-logout { background-color: #ef4444; }
+
+    .admin-link { color: #ef4444 !important; font-weight: 700 !important; }
+    
+    header.main-header {
+      background-color: var(--white);
+      padding: 20px 40px;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      top: 0;
+      z-index: 1000;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .logo {
+        font-family: 'Poppins', sans-serif;
+        font-size: 24px; font-weight: 700;
+        color: var(--primary-emerald);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    nav { 
+        display: flex; 
+        gap: 20px; 
+        flex-wrap: wrap; 
+    }
+
+    nav a {
+        text-decoration: none;
+        color: var(--text-slate);
+        font-weight: 500;
+        padding: 8px 12px;
+        border-radius: 6px;
+        transition: 0.2s;
+        white-space: nowrap;
+    }
+    nav a:hover {
+        background-color: #f1f5f9;
+        color: var(--primary-emerald);
+    }
+
+    /* Page Header */
+    .page-header {
+      background: linear-gradient(135deg, rgba(6, 78, 59, 0.05) 0%, transparent 100%);
+      padding: 50px 20px; text-align: center; border-bottom: 1px solid var(--border-color);
+    }
+    .page-header h1 { font-family: 'Poppins', sans-serif; font-size: 32px; color: var(--primary-emerald); margin-bottom: 10px; }
+    .page-header p { color: var(--text-light); }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 1200px;
+      margin: 40px auto 60px;
+      padding: 0 20px;
+    }
+
+    /* 찜한 상품이 없을 때 (Empty State) */
+    .empty-wishlist {
+      text-align: center;
+      padding: 100px 20px;
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+    }
+    .empty-wishlist i {
+      font-size: 5rem;
+      color: #cbd5e1;
+      margin-bottom: 25px;
+    }
+    .empty-wishlist h3 {
+      font-size: 1.5rem;
+      color: var(--text-slate);
+      margin-bottom: 10px;
+    }
+    .empty-wishlist p {
+      color: var(--text-light);
+      margin-bottom: 30px;
+    }
+    .btn-shop {
+      background: var(--primary-emerald);
+      color: white;
+      padding: 14px 35px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 700;
+      transition: 0.2s;
+      display: inline-block;
+      box-shadow: 0 4px 10px rgba(6, 78, 59, 0.2);
+    }
+    .btn-shop:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    /* Product Grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 30px;
+    }
+
+    .product-card {
+      background: var(--white); border-radius: 20px; padding: 25px; text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s; position: relative; border: 1px solid rgba(0,0,0,0.03);
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .product-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-md); }
+
+    .image-container { position: relative; width: 100%; aspect-ratio: 1/1; margin-bottom: 20px; background: #fdfdfd; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .image-container img { width: 80%; height: 80%; object-fit: contain; transition: transform 0.5s ease; }
+    .product-card:hover .image-container img { transform: scale(1.1); }
+
+    /* 위시리스트 해제 폼 */
+    .heart-wish-form { position: absolute; bottom: 10px; right: 10px; z-index: 10; margin: 0; }
+    .heart-wish-btn { 
+      background: #fff1f2; border: 1px solid #ef4444; border-radius: 50%; width: 42px; height: 42px; 
+      display: flex; align-items: center; justify-content: center; cursor: pointer; 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: #ef4444; font-size: 1.2rem; transition: 0.3s; 
+    }
+    .heart-wish-btn:hover { background: #fee2e2; transform: scale(1.15); }
+
+    /* Product Info */
+    .product-info { width: 100%; }
+    .product-info h3 { font-family: 'Poppins', sans-serif; font-size: 18px; margin-bottom: 8px; color: var(--primary-emerald); }
+    .price-tag { font-size: 20px; font-weight: 700; color: var(--primary-emerald); display: block; margin-bottom: 20px; }
+
+    .cart-button { width: 100%; padding: 14px; background-color: var(--primary-emerald); color: var(--white); border: none; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; font-size: 15px; }
+    .cart-button:hover { background-color: var(--primary-hover); }
+
+    /* Modal */
+    .custom-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center; z-index: 9999; opacity: 0; visibility: hidden; transition: 0.3s; }
+    .custom-modal-overlay.show { opacity: 1; visibility: visible; }
+    .custom-modal { background: white; padding: 30px 40px; border-radius: 16px; text-align: center; transform: translateY(-20px); transition: 0.3s; }
+    .custom-modal-overlay.show .custom-modal { transform: translateY(0); }
+    .custom-modal h3 { color: var(--primary-emerald); margin-bottom: 10px; font-size: 1.5rem; }
+    .modal-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
+    .modal-btn { padding: 12px 24px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+    .btn-continue { background: #f1f5f9; color: var(--text-slate); }
+    .btn-continue:hover { background: #e2e8f0; }
+    .btn-gocart { background: var(--primary-emerald); color: white; }
+    .btn-gocart:hover { background: var(--primary-hover); }
+
+    footer { text-align: center; padding: 40px 20px; background: var(--primary-emerald); color: rgba(255,255,255,0.6); font-size: 14px; margin-top: auto; }
+
+    @media (max-width: 1024px) {
+      .top-bar { padding: 10px 20px; }
+      header.main-header { padding: 15px 20px; flex-direction: column; align-items: center; gap: 15px; }
+      nav { justify-content: center; width: 100%; gap: 10px; }
+      nav a { font-size: 13px; padding: 6px 8px; }
+    }
+
+    @media (max-width: 640px) {
+      nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; }
+      nav a { font-size: 12px; padding: 6px 2px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="custom-modal-overlay" id="cartModal">
+    <div class="custom-modal">
+      <h3><i class="fa-solid fa-basket-shopping" style="color:#22c55e;"></i> 장바구니에 담았습니다!</h3>
+      <p style="color: var(--text-light);">장바구니 페이지로 이동하시겠습니까?</p>
+      <div class="modal-buttons">
+        <button class="modal-btn btn-continue" onclick="closeCartModal()">계속 쇼핑하기</button>
+        <button class="modal-btn btn-gocart" onclick="location.href='../cart'">장바구니 확인</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="top-bar">
+    <% if (!user) { %>
+        <a href="../login" class="btn-login">로그인</a>
+        <a href="../user/register" class="btn-login">회원가입</a>
+    <% } else { %>
+        <span><strong><%= user.name %></strong>님 환영합니다!</span>
+        <a href="../user/logout" class="btn-logout">로그아웃</a>
+    <% } %>
+  </div>
+
+  <header class="main-header">
+    <a href="../" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
+    <nav>
+      <a href="../">홈</a>
+      <a href="../products">상품목록</a>
+      <a href="../cart">장바구니</a>
+      <a href="../board">고객센터</a>
+      <a href="../notice">공지사항</a>
+      <a href="../user/mypage">마이페이지</a>
+      <a href="./" style="color: var(--primary-emerald); font-weight: 700;">위시리스트</a>
+      <a href="../user/orders">주문조회</a>
+
+      <% if (typeof user !== 'undefined' && user && user.username === 'admin') { %>
+        <a href="../admin" class="admin-link">[관리자 모드]</a>
+      <% } %>
+    </nav>
+  </header>
+
+  <div class="page-header">
+    <h1><i class="fa-solid fa-heart" style="color: #ef4444;"></i> 나의 위시리스트</h1>
+    <p>지구를 생각하는 마음으로 찜해둔 상품들을 확인하세요.</p>
+  </div>
+
+  <main>
+    <% if (items.length === 0) { %>
+        <div class="empty-wishlist">
+            <i class="fa-solid fa-heart-crack"></i>
+            <h3>찜한 상품이 없습니다.</h3>
+            <p>다양한 친환경 상품을 둘러보고 마음에 드는 상품을 찜해보세요!</p>
+            <a href="../products" class="btn-shop">상품 구경하러 가기</a>
+        </div>
+    <% } else { %>
+        <div class="product-grid">
+            <% items.forEach(item => { %>
+                <article class="product-card">
+                    <div class="image-container">
+                        <img src="../images/<%= item.image || 'default.png' %>" alt="<%= item.product_name %>">
+                        
+                        <form action="./wishlist/toggle" method="POST" class="heart-wish-form">
+                            <input type="hidden" name="productId" value="<%= item.product_id %>">
+                            
+                            <button type="submit" class="heart-wish-btn active" title="찜 취소">
+                                <i class="fa-solid fa-heart"></i>
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="product-info">
+                        <h3><%= item.product_name %></h3>
+                        <strong class="price-tag">₩<%= Number(item.price).toLocaleString() %></strong>
+
+                        <form action="../cart/add" method="POST" style="width: 100%;">
+                            <input type="hidden" name="productId" value="<%= item.product_id %>">
+                            <button type="submit" class="cart-button">
+                                <i class="fa-solid fa-cart-plus"></i> 장바구니 담기
+                            </button>
+                        </form>
+                    </div>
+                </article>
+            <% }) %>
+        </div>
+    <% } %>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Premium ECO-LIFE Mall. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // 찜 취소 비동기 로직 내부 통신 타겟 상대 경로 변경
+    document.querySelectorAll('.heart-wish-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            const card = this.closest('.product-card');
+            const formData = new URLSearchParams(new FormData(this));
+
+            fetch('./wishlist/toggle', {
+                method: 'POST',
+                body: formData,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'removed') {
+                    card.style.transition = 'all 0.3s ease';
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.9)';
+                    setTimeout(() => {
+                        card.remove();
+                        if (document.querySelectorAll('.product-card').length === 0) {
+                            window.location.reload();
+                        }
+                    }, 300);
+                }
+            })
+            .catch(err => console.error(err));
+        });
+    });
+
+    function closeCartModal() {
+      document.getElementById('cartModal').classList.remove('show');
+    }
+
+    // 장바구니 담기 비동기 로직 내부 통신 타겟 상대 경로 변경
+    document.querySelectorAll('form[action="../cart/add"]').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            const formData = new URLSearchParams(new FormData(this));
+
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+            .then(response => {
+                if (response.status === 401) {
+                    alert('로그인이 필요한 서비스입니다.');
+                    window.location.href = '../user/login';
+                    return;
+                }
+                if (response.ok || response.redirected) {
+                    document.getElementById('cartModal').classList.add('show');
+                } else {
+                    alert('장바구니 담기에 실패했습니다.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+  </script>
+</body>
+</html>

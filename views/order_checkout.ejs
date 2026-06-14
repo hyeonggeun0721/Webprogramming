@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>주문/결제 - ECO-LIFE Mall</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    :root { --primary-color: #064E3B; --primary-hover: #059669; --text-dark: #1e293b; --text-gray: #64748b; --bg-light: #F8FAF9; --border-color: #E2E8F0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; }
+    body { background-color: var(--bg-light); color: var(--text-dark); }
+    
+    header.main-header { background-color: #fff; padding: 20px 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: center; }
+    .logo { font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 700; color: var(--primary-color); text-decoration: none; }
+
+    main { max-width: 1000px; margin: 40px auto; padding: 0 20px; display: flex; gap: 30px; align-items: flex-start; }
+    
+    .checkout-left { flex: 1; }
+    .checkout-right { width: 350px; position: sticky; top: 20px; }
+
+    .box { background: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid var(--border-color); margin-bottom: 20px; }
+    .box h2 { font-size: 1.2rem; margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
+
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 5px; color: var(--text-gray); }
+    .form-group input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; outline: none; }
+    .form-group input:focus { border-color: var(--primary-color); }
+
+    .item-list { list-style: none; }
+    .item-list li { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed var(--border-color); font-size: 0.95rem; }
+    .item-list li:last-child { border-bottom: none; }
+
+    .total-price { font-size: 1.5rem; font-weight: 700; color: var(--primary-color); text-align: right; margin-top: 15px; }
+    
+    .btn-pay { width: 100%; background: var(--primary-color); color: #fff; border: none; padding: 16px; border-radius: 8px; font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-top: 20px; transition: 0.2s; }
+    .btn-pay:hover { background: var(--primary-hover); transform: translateY(-2px); }
+
+    /* 로딩 오버레이 CSS */
+    #payment-loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.9); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
+    .spinner { width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .loading-text { font-size: 18px; font-weight: 700; color: var(--text-dark); transition: color 0.3s; }
+    .loading-subtext { font-size: 14px; color: var(--text-gray); margin-top: 5px; }
+    
+    @media (max-width: 800px) { main { flex-direction: column; } .checkout-right { width: 100%; position: static; } }
+  </style>
+</head>
+<body>
+
+  <header class="main-header">
+    <a href="./" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE 결제</a>
+  </header>
+
+  <main>
+    <form id="finalProcessForm" action="./process" method="POST" style="display: contents;">
+        <input type="hidden" name="checkedIds" value="<%= checkedIds %>">
+
+        <div class="checkout-left">
+            <div class="box">
+                <h2>주문자 정보</h2>
+                <div class="form-group">
+                    <label>이름</label>
+                    <input type="text" value="<%= user.name %>" readonly style="background: #f8fafc; color: #64748b;">
+                </div>
+                <div class="form-group">
+                    <label>이메일</label>
+                    <input type="email" name="email" value="<%= user.email || '' %>" placeholder="이메일을 입력해주세요" <%= user.email ? 'readonly style="background: #f8fafc; color: #64748b;"' : '' %>>
+                    <% if (user.email) { %>
+                        <small style="color: var(--text-gray); font-size: 0.8rem; margin-top: 5px; display: block;">* 등록된 회원 이메일 정보입니다.</small>
+                    <% } else { %>
+                        <small style="color: #3b82f6; font-size: 0.8rem; margin-top: 5px; display: block;">* 이메일 정보가 없습니다. 입력하시면 회원 정보에 저장됩니다.</small>
+                    <% } %>
+                </div>
+            </div>
+
+            <div class="box">
+                <h2>배송지 정보</h2>
+                <div class="form-group">
+                    <label>연락처</label>
+                    <input type="text" name="phone" value="<%= user.phone || '' %>" placeholder="010-0000-0000" required>
+                </div>
+                <div class="form-group">
+                    <label>배송 주소</label>
+                    <input type="text" name="address" value="<%= user.address || '' %>" placeholder="상세 주소를 입력해주세요" required>
+                </div>
+                <div class="form-group">
+                    <label>배송 메모</label>
+                    <input type="text" name="memo" placeholder="예: 문 앞에 놓아주세요">
+                </div>
+            </div>
+        </div>
+
+        <div class="checkout-right">
+            <div class="box">
+                <h2>결제 상세</h2>
+                <ul class="item-list">
+                    <% let total = 0; %>
+                    <% items.forEach(item => { %>
+                        <% let sub = item.price * item.quantity; total += sub; %>
+                        <li>
+                            <span><%= item.name %> (x<%= item.quantity %>)</span>
+                            <strong>₩<%= sub.toLocaleString() %></strong>
+                        </li>
+                    <% }) %>
+                </ul>
+                <div style="border-top: 2px solid #E2E8F0; margin-top: 15px; padding-top: 15px;">
+                    <div style="color: var(--text-gray); font-size: 0.9rem;">총 결제 금액</div>
+                    <div class="total-price">₩<%= total.toLocaleString() %></div>
+                </div>
+
+                <button type="submit" class="btn-pay"><i class="fa-solid fa-check"></i> 최종 결제하기</button>
+            </div>
+        </div>
+    </form>
+  </main>
+
+  <div id="payment-loading-overlay">
+      <div class="spinner"></div>
+      <div class="loading-text">안전하게 결제를 진행하고 있습니다...</div>
+      <div class="loading-subtext">창을 닫거나 새로고침하지 마세요. (PG사 연결 중)</div>
+  </div>
+
+  <script>
+    const finalForm = document.getElementById('finalProcessForm');
+    
+    if (finalForm) {
+      finalForm.addEventListener('submit', function(e) {
+          e.preventDefault(); 
+          
+          const overlay = document.getElementById('payment-loading-overlay');
+          const textObj = overlay.querySelector('.loading-text');
+          overlay.style.display = 'flex';
+
+          setTimeout(() => { 
+              textObj.innerText = "카드사 승인 대기 중..."; 
+          }, 1000);
+          
+          setTimeout(() => { 
+              textObj.innerText = "결제 정보 암호화 및 승인 완료!"; 
+              textObj.style.color = "#059669"; 
+          }, 2500);
+
+          setTimeout(() => { 
+              finalForm.submit(); 
+          }, 3000);
+      });
+    }
+  </script>
+</body>
+</html>

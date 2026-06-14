@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원 관리 - ECO-LIFE Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root { --primary-color: #064E3B; --primary-hover: #059669; --accent-color: #facc15; --text-dark: #1e293b; --text-gray: #64748b; --bg-light: #F8FAF9; --bg-white: #ffffff; --border-color: #E2E8F0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; }
+    body { background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; }
+    .top-bar { display: flex; justify-content: flex-end; align-items: center; padding: 10px 40px; background-color: var(--primary-color); color: white; font-size: 0.9em; }
+    .top-bar span { margin-right: 15px; }
+    .top-bar a { color: white; text-decoration: none; padding: 5px 12px; border-radius: 4px; margin-left: 8px; transition: 0.2s; }
+    .top-bar .btn-login { background-color: var(--accent-color); color: var(--primary-color); font-weight: 700; }
+    .top-bar .btn-logout { background-color: #ef4444; }
+    header.main-header { background-color: var(--bg-white); padding: 20px 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; display: flex; justify-content: space-between; align-items: center; top: 0; z-index: 100; }
+    .logo { font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 700; color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+    nav { display: flex; gap: 20px; flex-wrap: wrap; justify-content: flex-end; }
+    nav a { text-decoration: none; color: var(--text-dark); font-weight: 500; padding: 8px 12px; border-radius: 6px; transition: 0.2s; white-space: nowrap; }
+    nav a:hover { background-color: #f1f5f9; color: var(--primary-color); }
+    .admin-link { color: #ef4444 !important; font-weight: 700 !important; }
+    main.admin-main { flex: 1; width: 100%; max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+    .dashboard-header { background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%); color: white; padding: 30px 40px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+    .dashboard-header h2 { font-size: 28px; margin-bottom: 5px; font-family: 'Poppins', sans-serif; }
+    .dashboard-header p { font-size: 16px; opacity: 0.9; }
+    .btn-back { background: var(--bg-white); color: var(--primary-color); border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+    .btn-back:hover { background: #f1f5f9; }
+    .admin-card { background-color: var(--bg-white); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border-color); overflow-x: auto; }
+    .admin-table { width: 100%; border-collapse: collapse; text-align: center; min-width: 600px; }
+    .admin-table th { background-color: #f8fafc; color: var(--text-gray); font-weight: 600; padding: 15px; border-bottom: 2px solid var(--border-color); font-size: 15px; }
+    .admin-table td { padding: 15px; border-bottom: 1px solid var(--border-color); vertical-align: middle; font-size: 15px; }
+    .admin-table tr:hover { background-color: #f1f5f9; }
+    
+    .btn-info { background-color: #3b82f6; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+    .btn-info:hover { background-color: #2563eb; }
+    .btn-danger { background-color: #ef4444; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+    .btn-danger:hover { background-color: #dc2626; }
+    
+    /* 💡 검색창 스타일 */
+    .search-bar { display: flex; gap: 10px; margin-bottom: 20px; justify-content: flex-end; }
+    .search-input { padding: 10px 15px; border: 1px solid var(--border-color); border-radius: 6px; outline: none; width: 250px; font-size: 14px; }
+    .search-input:focus { border-color: var(--primary-color); }
+
+    footer { text-align: center; padding: 30px; background-color: var(--primary-color); color: rgba(255,255,255,0.7); font-size: 14px; margin-top: auto; }
+
+    @media (max-width: 768px) {
+      .dashboard-header { flex-direction: column; gap: 15px; text-align: center; }
+      .search-bar { justify-content: center; width: 100%; }
+      .search-input { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <% if (typeof user === 'undefined' || !user) { %>
+        <a href="../login" class="btn-login">로그인</a>
+        <a href="../user/register" class="btn-login">회원가입</a>
+    <% } else { %>
+        <span><strong><%= user.name %></strong>님 환영합니다!</span>
+        <a href="../user/logout" class="btn-logout">로그아웃</a>
+    <% } %>
+  </div>
+
+  <header class="main-header">
+    <a href="../" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
+    <nav>
+      <a href="../">홈</a>
+      <a href="../products">상품목록</a>
+      <a href="../cart">장바구니</a>
+      <a href="../board">고객센터</a>
+      <a href="../notice">공지사항</a>
+      <a href="../user/mypage">마이페이지</a>
+      <a href="../user/wishlist">위시리스트</a>
+      <a href="../user/orders">주문조회</a>
+      <% if (typeof user !== 'undefined' && user && user.username === 'admin') { %>
+        <a href="./" class="admin-link" style="color: var(--primary-color); font-weight: 700;">[관리자 모드]</a>
+      <% } %>
+    </nav>
+  </header>
+
+  <main class="admin-main">
+    <div class="dashboard-header">
+      <div>
+        <h2><i class="fa-solid fa-users"></i> 회원 관리</h2>
+        <p>가입된 회원 목록 확인 및 계정 관리를 수행합니다.</p>
+      </div>
+      <a href="./" class="btn-back"><i class="fa-solid fa-house"></i> 대시보드로</a>
+    </div>
+
+    <section class="admin-card">
+      
+      <form action="./users" method="GET" class="search-bar">
+          <input type="text" name="search" class="search-input" placeholder="아이디 또는 이름 검색..." value="<%= typeof searchKeyword !== 'undefined' ? searchKeyword : '' %>">
+          <button type="submit" class="btn-info" style="padding: 10px 20px;"><i class="fa-solid fa-magnifying-glass"></i> 검색</button>
+      </form>
+
+      <table class="admin-table">
+          <thead>
+              <tr>
+                  <th width="100">회원번호</th>
+                  <th>아이디</th>
+                  <th>이름</th>
+                  <th width="200">관리</th>
+              </tr>
+          </thead>
+          <tbody>
+              <% if (users.length === 0) { %>
+                  <tr>
+                      <td colspan="4" style="padding: 40px; color: var(--text-gray);">검색된 회원이 없습니다.</td>
+                  </tr>
+              <% } else { %>
+                  <% users.forEach(u => { %>
+                      <tr>
+                          <td><%= u.id %></td>
+                          <td style="font-weight: 600;"><%= u.username %></td>
+                          <td><%= u.name %></td>
+                          <td>
+                              <div style="display: flex; gap: 8px; justify-content: center; align-items: center;">
+                                  <a href="./user/view/<%= u.id %>" class="btn-info">
+                                      <i class="fa-solid fa-magnifying-glass"></i> 보기
+                                  </a>
+                                  <form action="./user/delete" method="POST" style="margin: 0;" onsubmit="return confirm('정말 이 회원을 강제 탈퇴시키겠습니까?');">
+                                      <input type="hidden" name="userId" value="<%= u.id %>">
+                                      <button type="submit" class="btn-danger"><i class="fa-solid fa-user-xmark"></i> 삭제</button>
+                                  </form>
+                              </div>
+                          </td>
+                      </tr>
+                  <% }) %>
+              <% } %>
+          </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Premium ECO-LIFE Mall. Admin Console.</p>
+  </footer>
+
+</body>
+</html>

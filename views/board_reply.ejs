@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>답글 작성 - ECO-LIFE Mall</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    /* =========================================
+       [마스터 UI 규격 변수] index.ejs와 100% 일치
+       ========================================= */
+    :root {
+      --primary-color: #064E3B; 
+      --primary-hover: #059669;
+      --accent-color: #facc15;
+      --text-dark: #1e293b;
+      --text-gray: #64748b;
+      --bg-light: #F8FAF9;
+      --bg-white: #ffffff;
+      --border-color: #E2E8F0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+      letter-spacing: -0.03em;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      line-height: 1.6;
+      display: flex; flex-direction: column; min-height: 100vh;
+    }
+
+    /* =========================================
+       [통합 헤더 & 네비게이션] 반응형 속성 추가
+       ========================================= */
+    .top-bar {
+      display: flex; justify-content: flex-end; align-items: center;
+      padding: 10px 40px; background-color: var(--primary-color);
+      color: white; font-size: 0.9em;
+    }
+    .top-bar span { margin-right: 15px; }
+    .top-bar a { color: white; text-decoration: none; padding: 5px 12px; border-radius: 4px; margin-left: 8px; transition: 0.2s; }
+    .top-bar .btn-login { background-color: var(--accent-color); color: var(--primary-color); font-weight: 700; }
+    .top-bar .btn-logout { background-color: #ef4444; }
+
+    header.main-header {
+      background-color: var(--bg-white);
+      padding: 20px 40px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      display: flex; justify-content: space-between; align-items: center;
+      top: 0; z-index: 1000;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .logo {
+      font-family: 'Poppins', sans-serif;
+      font-size: 24px; font-weight: 700;
+      color: var(--primary-color);
+      text-decoration: none; display: flex; align-items: center; gap: 10px;
+    }
+
+    nav { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+
+    nav a {
+      text-decoration: none; color: var(--text-dark);
+      font-size: 15px; font-weight: 500;
+      padding: 8px 12px; border-radius: 6px; transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    nav a:hover {
+      background-color: #f1f5f9;
+      color: var(--primary-color);
+    }
+    nav a.active { color: var(--primary-color); font-weight: 700; }
+    .admin-link { color: #ef4444 !important; font-weight: 700 !important; }
+
+    /* =========================================
+       [본문 디자인: 답글 작성 폼 UI]
+       ========================================= */
+    .page-header {
+      background: linear-gradient(135deg, rgba(6, 78, 59, 0.05) 0%, transparent 100%);
+      padding: 50px 20px; text-align: center; border-bottom: 1px solid var(--border-color);
+    }
+    .page-header h1 { font-family: 'Poppins', sans-serif; font-size: 36px; color: var(--primary-color); }
+    
+    main { flex: 1; width: 100%; max-width: 850px; margin: 40px auto 80px; padding: 0 20px; }
+
+    .write-container {
+      background: var(--bg-white);
+      border-radius: 16px;
+      padding: 40px 50px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--border-color);
+    }
+
+    .parent-notice {
+      background-color: #f8fafc;
+      border-left: 4px solid var(--primary-color);
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      font-size: 15px;
+    }
+
+    .form-group { margin-bottom: 25px; }
+    
+    .form-group label {
+      display: block;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 15px;
+      color: var(--text-dark);
+      transition: all 0.2s ease;
+      background-color: #fdfdfd;
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(6, 78, 59, 0.1);
+      background-color: var(--bg-white);
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 200px;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 40px;
+      padding-top: 25px;
+      border-top: 1px solid var(--border-color);
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .btn-back {
+      color: var(--text-gray);
+      text-decoration: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s;
+    }
+    .btn-back:hover { color: var(--text-dark); }
+
+    /* 버튼 옆 요소 묶음 그룹 */
+    .action-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-submit {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 14px 35px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 10px rgba(6, 78, 59, 0.2);
+    }
+
+    .btn-submit:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    /* 토글 스위치용 디자인 */
+    .toggle-group {
+      display: inline-flex;
+      gap: 12px;
+      background-color: #f8fafc;
+      padding: 8px 16px;
+      border-radius: 30px;
+      border: 1px solid var(--border-color);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text-dark);
+    }
+
+    .toggle-label input[type="radio"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--primary-color);
+      cursor: pointer;
+    }
+
+    footer { text-align: center; padding: 40px 20px; background: var(--primary-color); color: rgba(255,255,255,0.7); font-size: 14px; margin-top: auto; }
+
+    /* =========================================
+       💡 미디어 쿼리 - 태블릿 및 중간 해상도 (1024px 이하)
+       ========================================= */
+    @media (max-width: 1024px) {
+      .top-bar { padding: 10px 20px; }
+      header.main-header { padding: 15px 20px; flex-direction: column; align-items: center; gap: 15px; }
+      nav { justify-content: center; width: 100%; gap: 10px; }
+      nav a { font-size: 13px; padding: 6px 8px; }
+    }
+
+    /* =========================================
+       💡 미디어 쿼리 - 모바일 해상도 (640px 이하)
+       ========================================= */
+    @media (max-width: 640px) {
+      nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; }
+      nav a { font-size: 12px; padding: 6px 2px; }
+      
+      .write-container { padding: 25px 20px; }
+      
+      .form-actions { 
+        flex-direction: column-reverse; /* 버튼 위아래 배치 */
+        gap: 20px; 
+        align-items: stretch;
+      }
+      
+      .action-right {
+        flex-direction: column;
+        width: 100%;
+        gap: 15px;
+      }
+      
+      .toggle-group {
+        width: 100%;
+      }
+      
+      .btn-submit {
+        width: 100%;
+      }
+      
+      .btn-back {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <% if (typeof user === 'undefined' || !user) { %>
+        <a href="../../login" class="btn-login">로그인</a>
+        <a href="../../user/register" class="btn-login">회원가입</a>
+    <% } else { %>
+        <span><strong><%= user.name %></strong>님 환영합니다!</span>
+        <a href="../../user/logout" class="btn-logout">로그아웃</a>
+    <% } %>
+  </div>
+
+  <header class="main-header">
+    <a href="../../" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
+    <nav>
+      <a href="../../">홈</a>
+      <a href="../../products">상품목록</a>
+      <a href="../../cart">장바구니</a>
+      <a href="../" style="color: var(--primary-color); font-weight: 700;">고객센터</a>
+      <a href="../../notice">공지사항</a>
+      <a href="../../user/mypage">마이페이지</a>
+      <a href="../../user/wishlist">위시리스트</a>
+      <a href="../../user/orders">주문조회</a>
+      <% if (typeof user !== 'undefined' && user && user.username === 'admin') { %>
+        <a href="../../admin" class="admin-link">[관리자 모드]</a>
+      <% } %>
+    </nav>
+  </header>
+
+  <main>
+    <div class="write-container">
+      
+      <div class="parent-notice">
+        <i class="fa-regular fa-file-lines"></i> 원글 제목: <strong><%= parentTitle %></strong>
+      </div>
+
+      <form action="../new" method="POST">
+        <input type="hidden" name="parent_id" value="<%= parentId %>">
+
+        <div class="form-group">
+          <label for="title">제목</label>
+          <input type="text" id="title" name="title" class="form-control" placeholder="답글 제목을 입력해 주세요." required>
+        </div>
+
+        <div class="form-group">
+          <label for="content">내용</label>
+          <textarea id="content" name="content" class="form-control" placeholder="답글 내용을 입력해 주세요." rows="5" required></textarea>
+        </div>
+
+        <div class="form-actions">
+          <a href="../" class="btn-back"><i class="fa-solid fa-arrow-left"></i> 목록으로 돌아가기</a>
+          
+          <div class="action-right">
+            <% if (typeof user !== 'undefined' && user) { %>
+              <div class="toggle-group">
+                <label class="toggle-label">
+                  <input type="radio" name="author_toggle" value="<%= user.username %>" checked>
+                  공개
+                </label>
+                <span style="color:#cbd5e1; font-size:12px;">|</span>
+                <label class="toggle-label">
+                  <input type="radio" name="author_toggle" value="익명">
+                  비공개
+                </label>
+              </div>
+              <input type="hidden" id="author" name="author" value="<%= user.username %>">
+            <% } else { %>
+              <input type="hidden" name="author" value="익명">
+            <% } %>
+            
+            <button type="submit" class="btn-submit"><i class="fa-solid fa-check"></i> 답글 등록</button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Premium ECO-LIFE Mall. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const radios = document.querySelectorAll('input[name="author_toggle"]');
+    const authorInput = document.getElementById('author');
+    if (radios && authorInput) {
+        radios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                authorInput.value = this.value;
+            });
+        });
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>마이페이지 - ECO-LIFE Mall</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-emerald: #064E3B; --primary-hover: #059669; --accent-gold: #FACC15;
+      --bg-cream: #F8FAF9; --text-slate: #334155; --text-gray: #64748b;
+      --border-color: #E2E8F0; --white: #ffffff;
+      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; }
+    body { background-color: var(--bg-cream); color: var(--text-slate); display: flex; flex-direction: column; min-height: 100vh; line-height: 1.6; }
+
+    .top-bar { display: flex; justify-content: flex-end; align-items: center; padding: 10px 40px; background-color: var(--primary-emerald); color: white; font-size: 0.9em; }
+    .top-bar span { margin-right: 15px; }
+    .top-bar a { color: white; text-decoration: none; padding: 5px 12px; border-radius: 4px; margin-left: 8px; transition: 0.2s; }
+    .top-bar .btn-login { background-color: var(--accent-gold); color: var(--primary-emerald); font-weight: 700; }
+    .top-bar .btn-logout { background-color: #ef4444; }
+
+    header.main-header { background-color: var(--white); padding: 20px 40px; box-shadow: var(--shadow-sm); position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+    .logo { font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 700; color: var(--primary-emerald); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+    
+    nav { display: flex; gap: 20px; }
+    nav a { text-decoration: none; color: var(--text-slate); font-weight: 500; padding: 8px 12px; border-radius: 6px; transition: 0.2s; }
+    nav a:hover { background-color: #f1f5f9; color: var(--primary-emerald); }
+
+    .page-header { background: linear-gradient(135deg, rgba(6, 78, 59, 0.05) 0%, transparent 100%); padding: 50px 20px; text-align: center; border-bottom: 1px solid var(--border-color); }
+    .page-header h1 { font-family: 'Poppins', sans-serif; font-size: 32px; color: var(--primary-emerald); margin-bottom: 10px; }
+    .page-header p { color: var(--text-gray); }
+
+    main { flex: 1; width: 100%; max-width: 1000px; margin: 40px auto; padding: 0 20px; display: flex; gap: 30px; }
+
+    /* 사이드바 영역 */
+    .sidebar { width: 250px; flex-shrink: 0; }
+    .profile-card { background: var(--white); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px 20px; text-align: center; margin-bottom: 20px; box-shadow: var(--shadow-sm); }
+    .profile-icon { width: 60px; height: 60px; background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--text-gray); margin: 0 auto 15px; }
+    .profile-name { font-size: 18px; font-weight: 700; color: #000; margin-bottom: 5px; }
+    .profile-points { font-size: 14px; color: var(--primary-emerald); font-weight: 600; background: #f0fdf4; padding: 5px 10px; border-radius: 20px; display: inline-block; }
+    
+    .menu-list { background: var(--white); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm); }
+    .menu-item { display: block; padding: 16px 20px; border-bottom: 1px solid var(--border-color); color: var(--text-slate); font-weight: 500; cursor: pointer; transition: 0.2s; }
+    .menu-item:last-child { border-bottom: none; }
+    .menu-item:hover, .menu-item.active { background: #f8fafc; color: var(--primary-emerald); font-weight: 700; }
+    
+    /* 컨텐츠 영역 */
+    .content-area { flex: 1; background: var(--white); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: var(--shadow-sm); padding: 30px; }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; animation: fadeIn 0.3s ease-out; }
+    .section-title { font-size: 20px; font-weight: 700; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 25px; color: #000; }
+
+    /* 폼 스타일 */
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; }
+    .form-control { width: 100%; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; outline: none; transition: border-color 0.2s; }
+    .form-control:focus { border-color: var(--primary-emerald); }
+    .form-control[readonly] { background-color: #f1f5f9; cursor: not-allowed; }
+    .btn-submit { background-color: var(--text-slate); color: white; border: none; padding: 12px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; width: 100%; font-size: 15px; transition: 0.2s; }
+    .btn-submit:hover { background-color: #0f172a; }
+    .btn-danger { background-color: #ef4444; color: white; border: none; padding: 12px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; width: 100%; font-size: 15px; transition: 0.2s; }
+    .btn-danger:hover { background-color: #dc2626; }
+
+    /* 게시글 목록 스타일 */
+    .post-list { list-style: none; }
+    .post-item { padding: 15px 0; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+    .post-item:last-child { border-bottom: none; }
+    .post-title { font-weight: 600; color: #000; text-decoration: none; font-size: 15px; }
+    .post-title:hover { text-decoration: underline; }
+    .post-date { font-size: 13px; color: var(--text-gray); }
+    .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+    .status-wait { background: #fef3c7; color: #d97706; }
+    .status-done { background: #dcfce7; color: #15803d; }
+
+    footer { text-align: center; padding: 40px 20px; background: var(--primary-emerald); color: rgba(255,255,255,0.6); font-size: 14px; margin-top: auto; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 768px) {
+      main { flex-direction: column; }
+      .sidebar { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <span><strong><%= user.name %></strong>님 환영합니다!</span>
+    <a href="./logout" class="btn-logout">로그아웃</a>
+  </div>
+
+  <header class="main-header">
+    <a href="../" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
+    <nav>
+      <a href="../">홈</a>
+      <a href="../products">상품목록</a>
+      <a href="../cart">장바구니</a>
+      <a href="../board">고객센터</a>
+      <a href="../notice">공지사항</a>
+      <a href="./mypage" style="color: var(--primary-emerald); font-weight: 700;">마이페이지</a>
+      <a href="../user/wishlist">위시리스트</a>
+      <a href="../user/orders">주문조회</a>
+      <% if (typeof user !== 'undefined' && user && user.username === 'admin') { %>
+        <a href="../admin" class="admin-link">[관리자 모드]</a>
+      <% } %>
+    </nav>
+  </header>
+
+  <div class="page-header">
+    <h1><i class="fa-solid fa-user"></i> 마이페이지</h1>
+    <p>회원정보 수정 및 나의 활동 내역을 관리하세요.</p>
+  </div>
+
+  <main>
+    <aside class="sidebar">
+      <div class="profile-card">
+        <div class="profile-icon"><i class="fa-solid fa-user"></i></div>
+        <div class="profile-name"><%= user.name %> 님</div>
+        <div class="profile-points">적립금: <%= user.points ? user.points.toLocaleString() : 0 %>P</div>
+      </div>
+      <div class="menu-list">
+        <div class="menu-item active" onclick="switchTab('profile')"><i class="fa-solid fa-pen-to-square"></i> 회원정보 수정</div>
+        <div class="menu-item" onclick="switchTab('posts')"><i class="fa-solid fa-list-check"></i> 내 게시글 내역</div>
+        <div class="menu-item" onclick="switchTab('withdraw')"><i class="fa-solid fa-user-xmark"></i> 회원 탈퇴</div>
+      </div>
+    </aside>
+
+    <section class="content-area">
+      
+      <div id="tab-profile" class="tab-pane active">
+        <h2 class="section-title">회원정보 수정</h2>
+        <form action="./update" method="POST">
+          <div class="form-group">
+            <label>아이디 (수정 불가)</label>
+            <input type="text" class="form-control" value="<%= user.username %>" readonly>
+          </div>
+          <div class="form-group">
+            <label>새 비밀번호</label>
+            <input type="password" name="password" class="form-control" placeholder="변경할 비밀번호를 입력하세요" required>
+          </div>
+          <div class="form-group">
+            <label>이름</label>
+            <input type="text" name="name" class="form-control" value="<%= user.name %>" required>
+          </div>
+          <div class="form-group">
+            <label>전화번호</label>
+            <input type="text" name="phone" class="form-control" value="<%= user.phone || '' %>" placeholder="010-0000-0000">
+          </div>
+          <div class="form-group">
+            <label>주소</label>
+            <input type="text" name="address" class="form-control" value="<%= user.address || '' %>" placeholder="배송받으실 주소를 입력하세요">
+          </div>
+          <button type="submit" class="btn-submit">정보 수정 저장</button>
+        </form>
+      </div>
+
+      <div id="tab-posts" class="tab-pane">
+        <h2 class="section-title">내 게시글 / 문의 내역</h2>
+        <% if (!myPosts || myPosts.length === 0) { %>
+            <p style="text-align: center; color: #64748b; padding: 40px 0;">작성한 게시글이 없습니다.</p>
+        <% } else { %>
+            <ul class="post-list">
+                <% myPosts.forEach(post => { %>
+                    <li class="post-item">
+                        <div>
+                            <a href="../board/view/<%= post.id %>" class="post-title"><%= post.title %></a>
+                            <div class="post-date"><%= post.created_at %></div>
+                        </div>
+                        <% if (post.status === '답변 완료') { %>
+                            <span class="status-badge status-done">답변완료</span>
+                        <% } else { %>
+                            <span class="status-badge status-wait">답변대기</span>
+                        <% } %>
+                    </li>
+                <% }) %>
+            </ul>
+        <% } %>
+      </div>
+
+      <div id="tab-withdraw" class="tab-pane">
+        <h2 class="section-title">회원 탈퇴</h2>
+        <div style="background: #fee2e2; padding: 20px; border-radius: 8px; margin-bottom: 20px; color: #991b1b; font-size: 14px;">
+            <p><strong><i class="fa-solid fa-triangle-exclamation"></i> 주의사항</strong></p>
+            <p style="margin-top: 5px;">탈퇴 시 보유 중인 적립금 및 주문 내역이 모두 삭제되며 복구가 불가능합니다.<br>본인 확인을 위해 비밀번호를 입력해 주세요.</p>
+        </div>
+        <form action="./delete-account" method="POST" onsubmit="return confirm('정말 탈퇴하시겠습니까? 삭제된 데이터는 복구할 수 없습니다.');">
+          <div class="form-group">
+            <label>비밀번호 확인</label>
+            <input type="password" name="password" class="form-control" placeholder="현재 비밀번호를 입력하세요" required>
+          </div>
+          <button type="submit" class="btn-danger">회원 탈퇴 처리</button>
+        </form>
+      </div>
+
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Premium ECO-LIFE Mall. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-pane').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.menu-item').forEach(menu => menu.classList.remove('active'));
+        
+        document.getElementById('tab-' + tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>

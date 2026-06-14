@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>장바구니 - ECO-LIFE Mall</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #064E3B; 
+      --primary-hover: #059669;
+      --accent-color: #facc15;
+      --text-dark: #1e293b;
+      --text-gray: #64748b;
+      --bg-light: #F8FAF9;
+      --bg-white: #ffffff;
+      --border-color: #E2E8F0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; }
+
+    body { background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; }
+
+    .top-bar { display: flex; justify-content: flex-end; align-items: center; padding: 10px 40px; background-color: var(--primary-color); color: white; font-size: 0.9em; }
+    .top-bar span { margin-right: 15px; }
+    .top-bar a { color: white; text-decoration: none; padding: 5px 12px; border-radius: 4px; margin-left: 8px; transition: 0.2s; }
+    .top-bar .btn-login { background-color: var(--accent-color); color: var(--primary-color); font-weight: 700; }
+    .top-bar .btn-logout { background-color: #ef4444; }
+
+    header.main-header { background-color: var(--bg-white); padding: 20px 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; display: flex; justify-content: space-between; align-items: center; top: 0; z-index: 100; flex-wrap: wrap; gap: 15px; }
+    .logo { font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 700; color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+
+    nav { display: flex; gap: 20px; flex-wrap: wrap; }
+    nav a { text-decoration: none; color: var(--text-dark); font-weight: 500; padding: 8px 12px; border-radius: 6px; transition: 0.2s; white-space: nowrap; }
+    nav a:hover { background-color: #f1f5f9; color: var(--primary-color); }
+
+    .admin-link { color: #ef4444 !important; font-weight: 700 !important; }
+
+    .page-header { background: linear-gradient(135deg, rgba(6, 78, 59, 0.05) 0%, transparent 100%); padding: 50px 20px; text-align: center; border-bottom: 1px solid rgba(0,0,0,0.05); }
+    .page-header h1 { font-family: 'Poppins', sans-serif; font-size: 32px; color: var(--primary-color); margin-bottom: 10px; }
+
+    main { flex: 1; max-width: 1200px; width: 100%; margin: 40px auto; padding: 0 20px; }
+    
+    .cart-layout-wrapper {
+        display: flex;
+        gap: 30px;
+        align-items: flex-start;
+    }
+
+    .cart-left-section {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .cart-right-section {
+        width: 340px;
+        flex-shrink: 0;
+        position: sticky;
+        top: 100px;
+    }
+
+    .cart-container { background-color: var(--bg-white); border-radius: 16px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); overflow-x: auto; border: 1px solid var(--border-color); }
+
+    .cart-table { width: 100%; border-collapse: collapse; text-align: center; min-width: 600px; }
+    .cart-table th { background-color: #f1f5f9; color: var(--text-gray); font-weight: 700; padding: 15px; border-bottom: 2px solid var(--border-color); }
+    .cart-table td { padding: 20px 15px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+
+    .checkbox-col { width: 60px; }
+    input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--primary-color); cursor: pointer; }
+
+    .product-info { display: flex; align-items: center; gap: 15px; text-align: left; }
+    .product-img { width: 65px; height: 65px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-color); }
+    .product-name { font-size: 1.1rem; font-weight: 700; }
+
+    .qty-control { display: inline-flex; align-items: center; background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; }
+    .qty-btn { background: none; border: none; padding: 8px 12px; cursor: pointer; }
+    .qty-value { padding: 0 15px; font-weight: 700; border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color); }
+
+    .item-total { font-weight: 700; color: var(--primary-color); font-size: 1.1rem; }
+    .delete-btn { color: #ef4444; background: none; border: none; cursor: pointer; font-size: 1.2rem; }
+
+    .checkout-summary { 
+        background-color: var(--bg-white); 
+        border-radius: 16px; 
+        padding: 30px; 
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); 
+        border: 1px solid var(--border-color); 
+        display: flex; 
+        flex-direction: column; 
+        gap: 25px; 
+    }
+    .total-amount-box { border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
+    .total-amount-box strong { font-size: 2.2rem; color: var(--primary-color); font-family: 'Poppins', sans-serif; display: block; margin-top: 10px; }
+    
+    .checkout-btn { width: 100%; background-color: var(--primary-color); color: white; border: none; padding: 16px 20px; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 12px rgba(6, 78, 59, 0.2); }
+    .checkout-btn:hover { background-color: var(--primary-hover); transform: translateY(-2px); }
+    .checkout-btn:disabled { background-color: #cbd5e1; cursor: not-allowed; box-shadow: none; }
+
+    footer { text-align: center; padding: 40px 20px; background: var(--primary-color); color: rgba(255,255,255,0.6); margin-top: auto; }
+
+    @media (max-width: 1024px) {
+      .top-bar { padding: 10px 20px; }
+      header.main-header { padding: 15px 20px; flex-direction: column; align-items: center; gap: 15px; }
+      nav { justify-content: center; width: 100%; gap: 10px; }
+      nav a { font-size: 13px; padding: 6px 8px; }
+    }
+
+    @media (max-width: 900px) {
+      .cart-layout-wrapper { flex-direction: column; }
+      .cart-right-section { width: 100%; position: static; }
+      nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; }
+      nav a { font-size: 12px; padding: 6px 2px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <% if (!user) { %>
+        <a href="../login" class="btn-login">로그인</a>
+        <a href="../user/register" class="btn-login">회원가입</a>
+    <% } else { %>
+        <span><strong><%= user.name %></strong>님 환영합니다!</span>
+        <a href="../user/logout" class="btn-logout">로그아웃</a>
+    <% } %>
+  </div>
+
+  <header class="main-header">
+    <a href="../" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
+    <nav>
+      <a href="../">홈</a>
+      <a href="../products">상품목록</a>
+      <a href="./" style="color: var(--primary-color); font-weight: 700;">장바구니</a>
+      <a href="../board">고객센터</a>
+      <a href="../notice">공지사항</a>
+      <a href="../user/mypage">마이페이지</a>
+      <a href="../user/wishlist">위시리스트</a>
+      <a href="../user/orders">주문조회</a>
+      
+      <% if (typeof user !== 'undefined' && user && user.username === 'admin') { %>
+        <a href="../admin" class="admin-link">[관리자 모드]</a>
+      <% } %>
+    </nav>
+  </header>
+
+  <div class="page-header">
+    <h1><i class="fa-solid fa-cart-shopping"></i> 장바구니</h1>
+    <p>주문하실 상품을 선택해 주세요.</p>
+  </div>
+
+  <main>
+    <div class="cart-layout-wrapper">
+      
+      <div class="cart-left-section">
+        <div class="cart-container">
+          <table class="cart-table">
+            <thead>
+              <tr>
+                <th class="checkbox-col"><input type="checkbox" id="selectAll" checked></th>
+                <th style="text-align: left; padding-left: 30px;">상품 정보</th>
+                <th>수량</th>
+                <th>주문 금액</th>
+                <th>삭제</th>
+              </tr>
+            </thead>
+            <tbody id="cartBody">
+              <% let total = 0; %>
+              <% if (!cartItems || cartItems.length === 0) { %>
+                <tr>
+                  <td colspan="5" style="padding: 100px 0;">
+                    <p style="color:#94a3b8; font-size: 1.2rem;">장바구니가 비어 있습니다.</p>
+                    <a href="../products" style="margin-top:20px; display:inline-block; color:var(--primary-color); font-weight:700;">상품 보러가기 →</a>
+                  </td>
+                </tr>
+              <% } else { %>
+                <% cartItems.forEach(item => { %>
+                  <% total += item.price * item.quantity; %>
+                  <tr class="cart-row">
+                    <td class="checkbox-col">
+                      <input type="checkbox" class="item-checkbox" value="<%= item.id %>" data-subtotal="<%= item.price * item.quantity %>" checked>
+                    </td>
+                    <td>
+                      <div class="product-info">
+                        <img src="../images/<%= item.image_url || 'default.png' %>" class="product-img">
+                        <div>
+                          <div class="product-name"><%= item.name %></div>
+                          <div class="product-price">개당 ₩<%= item.price.toLocaleString() %></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <form action="./update" method="POST" style="margin:0;">
+                        <input type="hidden" name="productId" value="<%= item.id %>">
+                        <div class="qty-control">
+                          <button type="submit" name="action" value="decrease" class="qty-btn">-</button>
+                          <span class="qty-value"><%= item.quantity %></span>
+                          <button type="submit" name="action" value="increase" class="qty-btn">+</button>
+                        </div>
+                      </form>
+                    </td>
+                    <td class="item-total">₩<%= (item.price * item.quantity).toLocaleString() %></td>
+                    <td>
+                      <form action="./delete" method="POST" style="margin:0;" onsubmit="return confirm('삭제하시겠습니까?');">
+                        <input type="hidden" name="productId" value="<%= item.id %>">
+                        <button type="submit" class="delete-btn"><i class="fa-regular fa-trash-can"></i></button>
+                      </form>
+                    </td>
+                  </tr>
+                <% }) %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <% if (cartItems && cartItems.length > 0) { %>
+        <div class="cart-right-section">
+          <div class="checkout-summary">
+            <div class="total-amount-box">
+              <span style="color:var(--text-gray); font-weight:700;">총 선택 결제 금액</span>
+              <strong id="finalTotal">₩<%= total.toLocaleString() %></strong>
+            </div>
+            <div class="checkout-actions">
+              <form id="checkoutForm" action="../order/checkout" method="POST">
+                <input type="hidden" name="checkedIds" id="checkedIds">
+                <button type="submit" class="checkout-btn" id="checkoutBtn">
+                  <i class="fa-solid fa-credit-card"></i> 구매 진행하기
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      <% } %>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Premium ECO-LIFE Mall. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const selectAll = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('.item-checkbox');
+    const finalTotalDisplay = document.getElementById('finalTotal');
+    const checkedIdsInput = document.getElementById('checkedIds');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    const checkoutForm = document.getElementById('checkoutForm');
+
+    function updateCartSummary() {
+      let total = 0;
+      let selectedIds = [];
+      const currentCheckboxes = document.querySelectorAll('.item-checkbox');
+      
+      currentCheckboxes.forEach(cb => {
+        if (cb.checked) {
+          total += parseInt(cb.dataset.subtotal);
+          selectedIds.push(cb.value);
+        }
+      });
+      if(finalTotalDisplay) finalTotalDisplay.innerText = '₩' + total.toLocaleString();
+      if(checkedIdsInput) checkedIdsInput.value = selectedIds.join(',');
+      if(checkoutBtn) checkoutBtn.disabled = (selectedIds.length === 0);
+    }
+
+    if(selectAll) {
+      selectAll.addEventListener('change', function() {
+        document.querySelectorAll('.item-checkbox').forEach(cb => cb.checked = this.checked);
+        updateCartSummary();
+      });
+    }
+
+    document.querySelectorAll('.item-checkbox').forEach(cb => {
+      cb.addEventListener('change', function() {
+        const allChecked = Array.from(document.querySelectorAll('.item-checkbox')).every(c => c.checked);
+        selectAll.checked = allChecked;
+        updateCartSummary();
+      });
+    });
+
+    if(document.querySelectorAll('.item-checkbox').length > 0) updateCartSummary();
+
+    // 💡 스크립트 내부 비동기 fetch 통신 타겟 상대 경로 변경 완료
+    document.querySelectorAll('form[action="./update"]').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); 
+
+            const action = e.submitter.value; 
+            const productId = this.querySelector('input[name="productId"]').value;
+            
+            const row = this.closest('.cart-row');
+            const qtySpan = this.querySelector('.qty-value');
+            const itemTotalTd = row.querySelector('.item-total');
+            const checkbox = row.querySelector('.item-checkbox');
+            
+            const priceText = row.querySelector('.product-price').innerText.replace(/[^0-9]/g, '');
+            const price = parseInt(priceText);
+
+            let currentQty = parseInt(qtySpan.innerText);
+            if (action === 'increase') currentQty++;
+            else if (action === 'decrease') currentQty--;
+
+            if (currentQty <= 0) {
+                row.remove();
+                if (document.querySelectorAll('.cart-row').length === 0) {
+                    location.reload(); 
+                }
+            } else {
+                qtySpan.innerText = currentQty;
+                const newTotal = price * currentQty;
+                itemTotalTd.innerText = '₩' + newTotal.toLocaleString();
+                checkbox.dataset.subtotal = newTotal; 
+            }
+
+            updateCartSummary();
+
+            fetch('./update', {
+                method: 'POST',
+                body: new URLSearchParams(`productId=${productId}&action=${action}`),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).catch(err => console.error('수량 업데이트 에러:', err));
+        });
+    });
+
+    if (checkoutForm) {
+      checkoutForm.addEventListener('submit', function(e) {
+          if (!checkedIdsInput.value || checkedIdsInput.value.trim() === "") {
+              e.preventDefault(); 
+              alert('구매할 상품을 선택해주세요.');
+          }
+      });
+    }
+
+    window.addEventListener('beforeunload', () => { sessionStorage.setItem('scrollPos', window.scrollY); });
+    window.addEventListener('pageshow', () => {
+        const scrollPos = sessionStorage.getItem('scrollPos');
+        if (scrollPos) { window.scrollTo(0, parseInt(scrollPos)); sessionStorage.removeItem('scrollPos'); }
+    });
+  </script>
+
+</body>
+</html>

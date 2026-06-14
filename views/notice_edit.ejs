@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항 수정 - ECO-LIFE Admin</title>
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background: #f8faf9; padding: 40px; }
+        .edit-container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        h2 { color: #064E3B; margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 700; color: #334155; }
+        input, textarea { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+        textarea { height: 300px; resize: none; }
+        .btn-box { display: flex; gap: 10px; margin-top: 30px; }
+        .btn-save { background: #064E3B; color: white; border: none; padding: 14px 30px; border-radius: 8px; cursor: pointer; font-weight: 700; }
+        .btn-cancel { background: #cbd5e1; color: white; text-decoration: none; padding: 14px 30px; border-radius: 8px; font-weight: 700; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="edit-container">
+        <h2>📝 공지사항 수정</h2>
+        <form action="../update" method="POST">
+            <input type="hidden" name="id" value="<%= notice.id %>">
+            <div class="form-group">
+                <label>제목</label>
+                <input type="text" name="title" value="<%= notice.title %>" required>
+            </div>
+            <div class="form-group">
+                <label>내용</label>
+                <textarea name="content" required><%= notice.content %></textarea>
+            </div>
+            <div class="btn-box">
+                <button type="submit" class="btn-save">수정 완료</button>
+                <a href="../../../notice" class="btn-cancel">취소</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

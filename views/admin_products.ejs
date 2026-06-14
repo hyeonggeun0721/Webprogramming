@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상품 관리 - ECO-LIFE Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root { 
+      --primary-color: #064E3B; 
+      --primary-hover: #059669; 
+      --accent-color: #facc15; 
+      --text-dark: #1e293b; 
+      --text-gray: #64748b; 
+      --bg-light: #F8FAF9; 
+      --bg-white: #ffffff; 
+      --border-color: #E2E8F0; 
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; }
+    
+    body { background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; }
+    
+    .top-bar { display: flex; justify-content: flex-end; align-items: center; padding: 10px 40px; background-color: var(--primary-color); color: white; font-size: 0.9em; }
+    .top-bar span { margin-right: 15px; }
+    .top-bar a { color: white; text-decoration: none; padding: 5px 12px; border-radius: 4px; margin-left: 8px; transition: 0.2s; }
+    .top-bar .btn-login { background-color: var(--accent-color); color: var(--primary-color); font-weight: 700; }
+    .top-bar .btn-logout { background-color: #ef4444; }
+    
+    header.main-header { 
+      background-color: var(--bg-white); padding: 20px 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; display: flex; justify-content: space-between; align-items: center; top: 0; z-index: 100; flex-wrap: wrap; gap: 15px;
+    }
+    .logo { font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 700; color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+    
+    nav { display: flex; gap: 20px; flex-wrap: wrap; }
+    nav a { text-decoration: none; color: var(--text-dark); font-weight: 500; padding: 8px 12px; border-radius: 6px; transition: 0.2s; white-space: nowrap; }
+    nav a:hover { background-color: #f1f5f9; color: var(--primary-color); }
+    .admin-link { color: #ef4444 !important; font-weight: 700 !important; }
+    
+    main.admin-main { flex: 1; width: 100%; max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+    
+    .dashboard-header { background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%); color: white; padding: 30px 40px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+    .dashboard-header h2 { font-size: 28px; margin-bottom: 5px; font-family: 'Poppins', sans-serif; }
+    .dashboard-header p { font-size: 16px; opacity: 0.9; }
+    
+    .btn-back { background: var(--bg-white); color: var(--primary-color); border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 8px; transition: 0.2s; white-space: nowrap; }
+    .btn-back:hover { background: #f1f5f9; }
+    
+    .admin-card { background-color: var(--bg-white); border-radius: 12px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border-color); }
+    
+    .product-add-form { display: flex; gap: 10px; align-items: center; background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px dashed #cbd5e1; flex-wrap: wrap; }
+    .form-input { padding: 10px 15px; border: 1px solid var(--border-color); border-radius: 6px; outline: none; font-size: 14px; flex: 1; min-width: 120px; }
+    .form-input:focus { border-color: var(--primary-color); }
+    
+    .form-input-file { background: white; cursor: pointer; padding: 8px 12px; }
+    
+    .table-container { width: 100%; overflow-x: auto; }
+    .admin-table { width: 100%; border-collapse: collapse; text-align: center; min-width: 900px; }
+    .admin-table th { background-color: #f8fafc; color: var(--text-gray); font-weight: 600; padding: 15px; border-bottom: 2px solid var(--border-color); font-size: 15px; }
+    .admin-table td { padding: 15px; border-bottom: 1px solid var(--border-color); vertical-align: middle; font-size: 15px; }
+    .admin-table tr:last-child td { border-bottom: none; }
+    .admin-table tr:hover { background-color: #f1f5f9; }
+    
+    .btn-danger { background-color: #ef4444; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; white-space: nowrap; }
+    .btn-danger:hover { background-color: #dc2626; }
+    
+    .btn-action { background-color: var(--primary-color); color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; white-space: nowrap; }
+    .btn-action:hover { background-color: var(--primary-hover); }
+    
+    .btn-edit { background-color: #3b82f6; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; white-space: nowrap; margin-right: 4px; }
+    .btn-edit:hover { background-color: #2563eb; }
+
+    /* 수정 모달 팝업 스타일 */
+    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
+    .modal-content { background-color: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 500px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); position: relative; }
+    .modal-header { font-size: 20px; font-weight: 700; margin-bottom: 20px; color: var(--primary-color); display: flex; align-items: center; gap: 8px; }
+    .modal-close { position: absolute; top: 20px; right: 20px; font-size: 20px; cursor: pointer; color: var(--text-gray); }
+    .modal-form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px; }
+    .modal-form-group label { font-size: 14px; font-weight: 600; color: var(--text-dark); }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; }
+
+    footer { text-align: center; padding: 30px; background-color: var(--primary-color); color: rgba(255,255,255,0.7); font-size: 14px; margin-top: auto; }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <% if (typeof user === 'undefined' || !user) { %>
+        <a href="../login" class="btn-login">로그인</a>
+        <a href="../user/register" class="btn-login">회원가입</a>
+    <% } else { %>
+        <span><strong><%= user.name %></strong>님 환영합니다!</span>
+        <a href="../user/logout" class="btn-logout">로그아웃</a>
+    <% } %>
+  </div>
+
+  <header class="main-header">
+    <a href="../" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
+    <nav>
+      <a href="../">홈</a>
+      <a href="../products">상품목록</a>
+      <a href="../cart">장바구니</a>
+      <a href="../board">고객센터</a>
+      <a href="../notice">공지사항</a>
+      <a href="../user/mypage">마이페이지</a>
+      <a href="../user/wishlist">위시리스트</a>
+      <a href="../user/orders">주문조회</a>
+      <% if (typeof user !== 'undefined' && user && user.username === 'admin') { %>
+        <a href="./" class="admin-link" style="color: var(--primary-color); font-weight: 700;">[관리자 모드]</a>
+      <% } %>
+    </nav>
+  </header>
+
+  <main class="admin-main">
+    <div class="dashboard-header">
+      <div>
+        <h2><i class="fa-solid fa-tags"></i> 상품 관리</h2>
+        <p>신규 상품 등록, 재고 수정 및 추천 상품을 설정합니다.</p>
+      </div>
+      <a href="./" class="btn-back"><i class="fa-solid fa-house"></i> 대시보드로</a>
+    </div>
+
+    <section class="admin-card">
+      
+      <form action="./product/add" method="POST" enctype="multipart/form-data" class="product-add-form">
+          <strong style="width: 100%; display: block; margin-bottom: 5px; color: var(--text-dark);"><i class="fa-solid fa-plus"></i> 새 상품 등록</strong>
+          
+          <input type="file" name="image" class="form-input form-input-file" accept="image/*" style="flex: 0 0 220px;" required>
+          
+          <select name="category" class="form-input" style="flex: 0 0 120px;" required>
+              <option value="kitchen">kitchen</option>
+              <option value="bathroom">bathroom</option>
+              <option value="living">living</option>
+          </select>
+          
+          <input type="text" name="name" class="form-input" placeholder="상품명" required>
+          <input type="number" name="price" class="form-input" placeholder="가격(원)" required>
+          <input type="text" name="description" class="form-input" placeholder="간단한 설명" style="flex: 2;">
+          <input type="number" name="stock" class="form-input" placeholder="초기 재고" value="10" style="flex: 0 0 100px;" required>
+          
+          <button type="submit" class="btn-action" style="padding: 10px 20px;"><i class="fa-solid fa-check"></i> 등록</button>
+      </form>
+
+      <div class="table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th width="90">상품번호</th>
+                    <th width="100">이미지</th>
+                    <th style="text-align: left;">상품명</th>
+                    <th>가격</th>
+                    <th>재고</th>
+                    <th>추천여부</th>
+                    <th width="180">관리</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (typeof products !== 'undefined' && products.length > 0) { %>
+                    <% products.forEach(p => { %>
+                        <tr>
+                            <td style="color: var(--text-gray);">#<%= p.id %></td>
+                            <td>
+                              <img src="../images/<%= p.image_url || 'default.png' %>" alt="<%= p.name %>" style="width: 45px; height: 45px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border-color); display: block; margin: 0 auto;">
+                            </td>
+                            <td style="text-align: left; font-weight: 600;">
+                              <span style="display: block; font-size: 12px; color: var(--text-gray);"><%= p.category %></span>
+                              <%= p.name %>
+                            </td>
+                            <td><%= p.price.toLocaleString() %>원</td>
+                            <td><%= p.stock %>개</td>
+                            <td>
+                                <form action="./product/toggle-feature" method="POST" onchange="this.submit()">
+                                    <input type="hidden" name="productId" value="<%= p.id %>">
+                                    <input type="checkbox" name="isFeatured" value="1" <%= p.is_featured === 1 ? 'checked' : '' %>>
+                                </form>
+                            </td>
+                            <td>
+                                <div style="display: flex; justify-content: center; align-items: center;">
+                                    <button type="button" class="btn-edit" onclick="openEditModal('<%= p.id %>', '<%= p.name %>', '<%= p.category %>', '<%= p.price %>', '<%= p.description %>', '<%= p.stock %>', '<%= p.image_url %>')">
+                                        <i class="fa-solid fa-pen-to-square"></i> 수정
+                                    </button>
+                                    
+                                    <form action="./product/delete" method="POST" style="margin: 0;" onsubmit="return confirm('이 상품을 삭제하시겠습니까?');">
+                                        <input type="hidden" name="productId" value="<%= p.id %>">
+                                        <button type="submit" class="btn-danger"><i class="fa-solid fa-trash-can"></i> 삭제</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr><td colspan="7" style="padding: 40px; color: var(--text-gray);">등록된 상품이 없습니다.</td></tr>
+                <% } %>
+            </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeEditModal()">&times;</span>
+        <div class="modal-header"><i class="fa-solid fa-pen-to-square"></i> 상품 정보 수정</div>
+        
+        <form action="./product/update" method="POST" enctype="multipart/form-data">
+            <input type="hidden" id="editProductId" name="productId">
+            <input type="hidden" id="editExistingImage" name="existingImage">
+
+            <div class="modal-form-group">
+                <label for="editName">상품명</label>
+                <input type="text" id="editName" name="name" class="form-input" required>
+            </div>
+            
+            <div class="modal-form-group">
+                <label for="editCategory">카테고리</label>
+                <select id="editCategory" name="category" class="form-input" required>
+                    <option value="kitchen">kitchen</option>
+                    <option value="bathroom">bathroom</option>
+                    <option value="living">living</option>
+                </select>
+            </div>
+
+            <div class="modal-form-group">
+                <label for="editPrice">가격 (원)</label>
+                <input type="number" id="editPrice" name="price" class="form-input" required>
+            </div>
+            <div class="modal-form-group">
+                <label for="editDescription">간단한 설명</label>
+                <input type="text" id="editDescription" name="description" class="form-input">
+            </div>
+            <div class="modal-form-group">
+                <label for="editStock">재고 수량</label>
+                <input type="number" id="editStock" name="stock" class="form-input" required>
+            </div>
+            <div class="modal-form-group">
+                <label for="editImage">상품 이미지 변경 (미선택 시 기존 유지)</label>
+                <input type="file" id="editImage" name="image" class="form-input form-input-file" accept="image/*">
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-danger" style="background-color: #64748b;" onclick="closeEditModal()">취소</button>
+                <button type="submit" class="btn-action">저장하기</button>
+            </div>
+        </form>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Premium ECO-LIFE Mall. Admin Console.</p>
+  </footer>
+
+  <script>
+      window.addEventListener('beforeunload', () => { sessionStorage.setItem('adminScrollPos', window.scrollY); });
+      window.addEventListener('pageshow', () => {
+          const scrollPos = sessionStorage.getItem('adminScrollPos');
+          if (scrollPos) { window.scrollTo(0, parseInt(scrollPos)); sessionStorage.removeItem('adminScrollPos'); }
+      });
+
+      function openEditModal(id, name, category, price, description, stock, imageUrl) {
+          document.getElementById('editProductId').value = id;
+          document.getElementById('editName').value = name;
+          document.getElementById('editCategory').value = category; 
+          document.getElementById('editPrice').value = price;
+          document.getElementById('editDescription').value = description;
+          document.getElementById('editStock').value = stock;
+          document.getElementById('editExistingImage').value = imageUrl;
+          
+          document.getElementById('editModal').style.display = 'flex';
+      }
+
+      function closeEditModal() {
+          document.getElementById('editModal').style.display = 'none';
+          document.getElementById('editImage').value = ''; 
+      }
+
+      window.onclick = function(event) {
+          const modal = document.getElementById('editModal');
+          if (event.target == modal) {
+              closeEditModal();
+          }
+      }
+  </script>
+</body>
+</html>

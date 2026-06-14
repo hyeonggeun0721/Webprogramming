@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>공지사항 상세 - ECO-LIFE Mall</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-emerald: #064E3B;
+      --primary-hover: #059669;
+      --accent-gold: #FACC15;
+      --bg-cream: #F8FAF9;
+      --text-slate: #334155;
+      --text-light: #64748B;
+      --white: #ffffff;
+      --border-color: #E2E8F0;
+      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 10px 25px rgba(0,0,0,0.05);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; }
+
+    body {
+      background-color: var(--bg-cream);
+      color: var(--text-slate);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Top Utility Bar */
+    .top-bar {
+      display: flex; justify-content: flex-end; align-items: center;
+      padding: 10px 40px; background-color: var(--primary-emerald);
+      color: white; font-size: 0.9em;
+    }
+    .top-bar span { margin-right: 15px; }
+    .top-bar a { color: white; text-decoration: none; padding: 5px 12px; border-radius: 4px; margin-left: 8px; transition: 0.2s; }
+    .top-bar .btn-login { background-color: var(--accent-gold); color: var(--primary-emerald); font-weight: 700; }
+    .top-bar .btn-logout { background-color: #ef4444; }
+
+    /* Main Header & Navigation */
+    header.main-header {
+      background-color: var(--white); padding: 20px 40px;
+      box-shadow: var(--shadow-sm); position: sticky; top: 0; z-index: 1000;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .logo { font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 700; color: var(--primary-emerald); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+    nav { display: flex; gap: 20px; }
+    nav a { text-decoration: none; color: var(--text-slate); font-weight: 500; padding: 8px 12px; border-radius: 6px; transition: 0.2s; }
+    nav a:hover { background-color: #f1f5f9; color: var(--primary-emerald); }
+    .admin-link { color: #ef4444 !important; font-weight: 700 !important; }
+
+    /* Page Header */
+    .page-header {
+      background: linear-gradient(135deg, rgba(6, 78, 59, 0.05) 0%, transparent 100%);
+      padding: 50px 20px; text-align: center; border-bottom: 1px solid var(--border-color);
+    }
+    .page-header h1 { font-family: 'Poppins', sans-serif; font-size: 32px; color: var(--primary-emerald); margin-bottom: 10px; }
+    .page-header p { color: var(--text-light); }
+
+    /* Notice Detail Container */
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    
+    .detail-container {
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: var(--shadow-md);
+      padding: 50px;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Article Header */
+    .article-header {
+      border-bottom: 2px solid var(--primary-emerald);
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+    .article-header h2 {
+      font-size: 28px;
+      color: var(--text-slate);
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+    .meta-info {
+      display: flex;
+      gap: 20px;
+      color: var(--text-light);
+      font-size: 0.95rem;
+    }
+    .meta-info i { color: var(--primary-emerald); margin-right: 5px; }
+
+    /* Article Body */
+    .article-body {
+      min-height: 300px;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text-slate);
+      white-space: pre-wrap; 
+    }
+
+    /* Attachment Box */
+    .attachment-box {
+      margin-top: 40px;
+      padding: 20px;
+      background-color: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .attachment-box i {
+      font-size: 24px;
+      color: var(--primary-emerald);
+    }
+    .attachment-box .file-info { display: flex; flex-direction: column; }
+    .attachment-box span { font-size: 0.85em; color: var(--text-light); }
+    .attachment-box a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 700;
+      transition: text-decoration 0.2s;
+    }
+    .attachment-box a:hover { text-decoration: underline; }
+
+    .post-nav { margin-top: 30px; border-top: 1px solid #e2e8f0; }
+    .nav-item { 
+        display: flex; align-items: center; padding: 15px 20px; 
+        text-decoration: none; color: #475569; border-bottom: 1px solid #f1f5f9;
+        transition: background 0.2s;
+    }
+    .nav-item:hover { background-color: #f8fafc; }
+    .nav-label { width: 80px; font-weight: 700; color: #064E3B; font-size: 0.9rem; }
+    .nav-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 15px; }
+    .nav-none { color: #cbd5e1; cursor: default; }
+
+    /* Action Buttons */
+    .action-area {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 1px solid var(--border-color);
+    }
+    
+    .btn {
+      padding: 12px 30px;
+      border-radius: 8px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      font-size: 1rem;
+    }
+    
+    .btn-list {
+      background-color: #f1f5f9;
+      color: var(--text-slate);
+      border: 1px solid #cbd5e1;
+    }
+    .btn-list:hover { background-color: #e2e8f0; }
+
+    .btn-edit {
+      background-color: var(--white);
+      color: var(--primary-emerald);
+      border-color: var(--primary-emerald);
+    }
+    .btn-edit:hover { background-color: #f0fdf4; }
+
+    .btn-delete {
+      background-color: #fef2f2;
+      color: #ef4444;
+      border: 1px solid #fca5a5;
+    }
+    .btn-delete:hover { background-color: #fee2e2; color: #dc2626; }
+
+    footer { text-align: center; padding: 40px 20px; background: var(--primary-emerald); color: rgba(255,255,255,0.6); font-size: 14px; }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <% if (!user) { %>
+        <a href="../../login" class="btn-login">로그인</a>
+        <a href="../../user/register" class="btn-login">회원가입</a>
+    <% } else { %>
+        <span><strong><%= user.name %></strong>님 환영합니다!</span>
+        <a href="../../user/logout" class="btn-logout">로그아웃</a>
+    <% } %>
+  </div>
+
+  <header class="main-header">
+    <a href="../../"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
+    <nav>
+      <a href="../../">홈</a>
+      <a href="../../products">상품목록</a>
+      <a href="../../cart">장바구니</a>
+      <a href="../../board">고객센터</a>
+      <a href="../../notice" style="color: var(--primary-emerald); font-weight: 700;">공지사항</a>
+      <a href="../../user/mypage">마이페이지</a>
+      <a href="../../user/wishlist">위시리스트</a>
+      <a href="../../user/orders">주문조회</a>
+      <% if (typeof user !== 'undefined' && user && user.username === 'admin') { %>
+        <a href="../../admin" class="admin-link">[관리자 모드]</a>
+      <% } %>
+    </nav>
+  </header>
+
+  <div class="page-header">
+    <h1>📢 공지사항</h1>
+    <p>ECO-LIFE Mall의 새로운 소식과 안내를 확인하세요.</p>
+  </div>
+
+  <main>
+    <article class="detail-container">
+      
+      <header class="article-header">
+        <h2><%= notice.title %></h2>
+        <div class="meta-info">
+          <span><i class="fa-solid fa-user-shield"></i> 관리자</span>
+          <span>
+            <i class="fa-regular fa-clock"></i> 
+            <%= new Date(notice.created_at).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %>
+          </span>
+        </div>
+      </header>
+
+      <div class="article-body">
+        <%= notice.content %>
+      </div>
+
+      <% if (locals.file) { %>
+        <div class="attachment-box">
+          <i class="fa-solid fa-paperclip"></i>
+          <div class="file-info">
+            <span>첨부파일 다운로드</span>
+            <a href="<%= file.filepath %>" download="<%= file.filename %>"><%= file.filename %></a>
+          </div>
+        </div>
+      <% } %>
+
+      <div class="post-nav">
+          <% if (nextNotice) { %>
+              <a href="../view/<%= nextNotice.id %>" class="nav-item">
+                  <span class="nav-label"><i class="fa-solid fa-chevron-up"></i> 다음글</span>
+                  <span class="nav-title"><%= nextNotice.title %></span>
+              </a>
+          <% } else { %>
+              <div class="nav-item nav-none">
+                  <span class="nav-label">다음글</span>
+                  <span class="nav-title">다음글이 없습니다.</span>
+              </div>
+          <% } %>
+
+          <% if (prevNotice) { %>
+              <a href="../view/<%= prevNotice.id %>" class="nav-item">
+                  <span class="nav-label"><i class="fa-solid fa-chevron-down"></i> 이전글</span>
+                  <span class="nav-title"><%= prevNotice.title %></span>
+              </a>
+          <% } else { %>
+              <div class="nav-item nav-none">
+                  <span class="nav-label">이전글</span>
+                  <span class="nav-title">이전글이 없습니다.</span>
+              </div>
+          <% } %>
+      </div>
+
+      <div class="action-area">
+          <a href="../../notice" class="btn btn-list"><i class="fa-solid fa-list"></i> 목록으로</a>
+          
+          <% if (user && user.username === 'admin') { %>
+              <a href="../../admin/notice/edit/<%= notice.id %>" class="btn btn-edit" 
+                style="border: 1px solid #064E3B; color: #064E3B; background-color: #f0fdf4;">
+                  <i class="fa-solid fa-pen-to-square"></i> 수정
+              </a>
+
+              <a href="../../admin/notice/delete/<%= notice.id %>" class="btn btn-delete" 
+                style="border: 1px solid #ef4444; color: #ef4444; background-color: #fff1f2;" 
+                onclick="return confirm('정말 삭제하시겠습니까?');">
+                  <i class="fa-regular fa-trash-can"></i> 삭제
+              </a>
+          <% } %>
+      </div>
+      
+    </article>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Premium ECO-LIFE Mall. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
