@@ -7,11 +7,16 @@ const db = new sqlite3.Database('./db/database.sqlite');
 router.get('/', (req, res) => {
     // 1. 전체 상품 조회 (통계용 등)
     db.all('SELECT * FROM products', (err, allProducts) => {
-        if (err) return res.status(500).send('DB 오류: 전체 상품 조회 실패');
-
+        if (err) {
+            console.error("SQL 에러:", err); // 에러 로그 출력
+            return res.status(500).send('DB 오류: 전체 상품 조회 실패');
+        }        
         // 2. 추천 상품 조회 (is_featured = 1)
         db.all('SELECT * FROM products WHERE is_featured = 1', (err2, featuredProducts) => {
-            if (err2) return res.status(500).send('DB 오류: 추천 상품 조회 실패');
+            if (err2) {
+                console.error("SQL 에러:", err); // 에러 로그 출력
+                return res.status(500).send('DB 오류: 추천 상품 조회 실패');
+            }
 
             // 3. 로그인된 사용자의 찜 목록 조회
             if (req.session.user) {
@@ -58,8 +63,11 @@ router.get('/all', (req, res) => {
     sql += ' ORDER BY id DESC';
 
     db.all(sql, params, (err, rows) => {
-        if (err) return res.status(500).send('전체 상품 목록 불러오기 실패');
-
+        if (err) {
+            console.error("SQL 에러:", err); // 에러 로그 출력
+            return res.status(500).send('전체 상품 목록 불러오기 실패');
+        }
+        
         if (req.session.user) {
             const userId = req.session.user.id;
             // 💡 버그 수정: 여기도 product_id로 변경

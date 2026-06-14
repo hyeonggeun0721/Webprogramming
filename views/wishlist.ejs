@@ -243,7 +243,7 @@
 
   <div class="top-bar">
     <% if (!user) { %>
-        <a href="../login" class="btn-login">로그인</a>
+        <a href="../user/login" class="btn-login">로그인</a>
         <a href="../user/register" class="btn-login">회원가입</a>
     <% } else { %>
         <span><strong><%= user.name %></strong>님 환영합니다!</span>
@@ -289,7 +289,7 @@
                     <div class="image-container">
                         <img src="../images/<%= item.image || 'default.png' %>" alt="<%= item.product_name %>">
                         
-                        <form action="./wishlist/toggle" method="POST" class="heart-wish-form">
+                        <form action="./toggle" method="POST" class="heart-wish-form">
                             <input type="hidden" name="productId" value="<%= item.product_id %>">
                             
                             <button type="submit" class="heart-wish-btn active" title="찜 취소">
@@ -302,7 +302,7 @@
                         <h3><%= item.product_name %></h3>
                         <strong class="price-tag">₩<%= Number(item.price).toLocaleString() %></strong>
 
-                        <form action="../cart/add" method="POST" style="width: 100%;">
+                        <form action="../add" method="POST" style="width: 100%;">
                             <input type="hidden" name="productId" value="<%= item.product_id %>">
                             <button type="submit" class="cart-button">
                                 <i class="fa-solid fa-cart-plus"></i> 장바구니 담기
@@ -355,7 +355,7 @@
     }
 
     // 장바구니 담기 비동기 로직 내부 통신 타겟 상대 경로 변경
-    document.querySelectorAll('form[action="../cart/add"]').forEach(form => {
+    document.querySelectorAll('form[action="../add"]').forEach(form => {
         form.addEventListener('submit', function(e) {
             e.preventDefault(); 
             const formData = new URLSearchParams(new FormData(this));
@@ -368,7 +368,7 @@
             .then(response => {
                 if (response.status === 401) {
                     alert('로그인이 필요한 서비스입니다.');
-                    window.location.href = '../user/login';
+                    window.location.href = '../login';
                     return;
                 }
                 if (response.ok || response.redirected) {
