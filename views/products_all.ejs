@@ -121,7 +121,7 @@
       <h3><i class="fa-solid fa-basket-shopping" style="color:var(--primary-color);"></i> 장바구니에 담았습니다!</h3>
       <p style="margin: 15px 0;">장바구니 페이지로 이동하시겠습니까?</p>
       <button class="modal-btn btn-continue" onclick="closeCartModal()">계속 쇼핑하기</button>
-      <button class="modal-btn btn-gocart" onclick="location.href='./cart'">장바구니 확인</button>
+      <button class="modal-btn btn-gocart" onclick="location.href='../cart'">장바구니 확인</button>
     </div>
   </div>
 
@@ -139,7 +139,7 @@
     <a href="./" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
     <nav>
       <a href="./">홈</a>
-      <a href="./products" style="color:var(--primary-color); font-weight: 700;">상품목록</a>
+      <a href="/" style="color:var(--primary-color); font-weight: 700;">상품목록</a>
       <a href="./cart">장바구니</a>
       <a href="./board">고객센터</a>
       <a href="./notice">공지사항</a>
@@ -156,12 +156,12 @@
     <h1>전체 상품 목록</h1>
     <p>지구를 위한 정직하고 깨끗한 제로웨이스트 상품들을 만나보세요.</p>
     <div style="margin-top: 20px;">
-      <a href="./" class="back-link"><i class="fa-solid fa-arrow-left"></i> 메인으로 돌아가기</a>
+      <a href="./" class="back-link"><i class="fa-solid fa-arrow-left"></i> 추천 상품으로 돌아가기</a>
     </div>
   </div>
 
   <main>
-    <form action="./products/all" method="GET" class="search-filter-bar">
+    <form action="./all" method="GET" class="search-filter-bar">
         <select name="category" class="filter-select">
             <option value="">전체 카테고리</option>
             <option value="kitchen" <%= (typeof query !== 'undefined' && query.category === 'kitchen') ? 'selected' : '' %>>주방용품</option>
@@ -230,7 +230,7 @@
   </footer>
 
   <script>
-    // 💡 찜하기 비동기 통신 경로 상대 경로 지정
+    // 💡 찜하기 비동기 통신 경로 수정 (../user/wishlist/toggle)
     document.querySelectorAll('.heart-wish-form').forEach(form => {
         form.addEventListener('submit', function(e) {
             e.preventDefault(); 
@@ -238,7 +238,7 @@
             const icon = btn.querySelector('i');
             const formData = new URLSearchParams(new FormData(this));
 
-            fetch('./user/wishlist/toggle', {
+            fetch('../user/wishlist/toggle', {
                 method: 'POST', body: formData, headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             })
             .then(res => res.json())
@@ -256,8 +256,9 @@
     });
 
     function closeCartModal() { document.getElementById('cartModal').classList.remove('show'); }
-    // 💡 장바구니 담기 비동기 통신 경로 상대 경로 지정
-    document.querySelectorAll('form[action="./cart/add"]').forEach(form => {
+    
+    // 💡 장바구니 담기 비동기 통신 경로 (form의 action인 ../cart/add 를 그대로 가져오므로 정상 동작)
+    document.querySelectorAll('form[action="../cart/add"]').forEach(form => {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             fetch(this.action, {
