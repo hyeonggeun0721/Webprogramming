@@ -34,7 +34,6 @@ router.post('/add', (req, res) => {
     if (!user) {
         return res.status(401).render('login_required', {
             message: '장바구니에 담기 위해서는 로그인이 필요합니다.',
-            // 💡 [/user/login] -> [../user/login] 상대 경로 변경
             redirectUrl: '../user/login'
         });
     }
@@ -48,7 +47,6 @@ router.post('/add', (req, res) => {
             console.error('장바구니 추가 에러:', err.message);
             return res.status(500).send('장바구니 추가 실패: ' + err.message);
         }
-        // 💡 [/cart] -> [./] 상대 경로 리다이렉트 변경
         res.redirect('./');
     });
 });
@@ -56,7 +54,6 @@ router.post('/add', (req, res) => {
 // 장바구니 목록 조회
 router.get('/', (req, res) => {
     const user = req.session.user;
-    // 💡 [/user/login] -> [../user/login] 상대 경로 변경
     if (!user) return res.redirect('./user/login');
 
     const query = `
@@ -76,7 +73,6 @@ router.get('/', (req, res) => {
 
 // 장바구니 수량 조절
 router.post('/update', (req, res) => {
-    // 💡 [/user/login] -> [../user/login] 상대 경로 변경
     if (!req.session.user) return res.redirect('./user/login');
     
     const userId = req.session.user.id;
@@ -92,12 +88,10 @@ router.post('/update', (req, res) => {
 
         if (newQuantity <= 0) {
             db.run(`DELETE FROM cart_items WHERE user_id = ? AND product_id = ?`, [userId, productId], () => {
-                // 💡 [/cart] -> [./] 상대 경로 리다이렉트 변경
                 res.redirect('./');
             });
         } else {
             db.run(`UPDATE cart_items SET quantity = ? WHERE user_id = ? AND product_id = ?`, [newQuantity, userId, productId], () => {
-                // 💡 [/cart] -> [./] 상대 경로 리다이렉트 변경
                 res.redirect('./');
             });
         }
@@ -109,18 +103,16 @@ router.post('/delete', (req, res) => {
     const user = req.session.user;
     const { productId } = req.body;
 
-    // 💡 [/user/login] -> [../user/login] 상대 경로 변경
     if (!user) return res.redirect('./user/login');
 
     const deleteQuery = `DELETE FROM cart_items WHERE user_id = ? AND product_id = ?`;
     db.run(deleteQuery, [user.id, productId], (err) => {
         if (err) return res.status(500).send('삭제 실패');
-        // 💡 [/cart] -> [./] 상대 경로 리다이렉트 변경
         res.redirect('./');
     });
 });
 
-// 1. [기존 코드 수정] 장바구니 -> 주문/결제(체크아웃) 페이지 이동
+// 1. 장바구니에서 선택된 상품 정보를 받아 주문/결제(체크아웃) 페이지 렌더링
 router.post('/checkout', (req, res) => {
     const user = req.session.user;
     if (!user) return res.redirect('../user/login');
@@ -144,24 +136,109 @@ router.post('/checkout', (req, res) => {
     const params = [user.id, ...idsArray];
 
     db.all(selectQuery, params, (err, items) => {
-        if (err || items.length === 0) {
-            return res.send('<script>alert("상품 정보를 찾을 수 없습니다."); history.back();</script>');
+        if (err) {
+            console.error("결제 DB 오류:", err.message);
+            return res.send(`<script>alert("DB 조회 중 오류가 발생했습니다: ${err.message}"); history.back();</script>`);
         }
-        
-        // 🛑 결제 처리는 밑으로 넘기고, 여기서는 주문서 페이지(checkout.ejs)를 띄워줍니다.
+
+        if (items.length === 0) {
+            return res.send('<script>alert("결제할 상품 정보를 찾을 수 없습니다."); location.href="./";</script>');
+        }
+
+        // 체크아웃 페이지 띄우기 (views/checkout.ejs 렌더링)
         res.render('checkout', { items, checkedIds, user });
     });
 });
 
-// 2. [신규 추가] 체크아웃 화면에서 '최종 결제하기' 버튼을 눌렀을 때 실제 DB 처리
+// 2. 체크아웃 페이지에서 '최종 결제하기' 폼 전송 시 실제 재고 차감 및 주문 처리
 router.post('/process', (req, res) => {
     const user = req.session.user;
     if (!user) return res.redirect('../user/login');
 
     const { checkedIds, phone, address, memo } = req.body;
-    
-    // 💡 기존 checkout에 있던 재고 확인, 주문 생성, 장바구니 비우기, 적립금 지급 로직을 여기에 그대로 옮겨 담으시면 됩니다.
-    // (이후 res.send(`<script>alert("결제 완료!"); location.href="/user/orders";</script>`); 실행)
+
+    if (!checkedIds || checkedIds.trim() === "") {
+        return res.send('<script>alert("선택된 상품이 없습니다."); history.back();</script>');
+    }
+
+    const idsArray = checkedIds.split(',').map(id => parseInt(id.trim()));
+    const placeholders = idsArray.map(() => '?').join(',');
+
+    const selectQuery = `
+        SELECT p.id, p.name, p.price, p.stock, c.quantity
+        FROM cart_items c
+        JOIN products p ON c.product_id = p.id
+        WHERE c.user_id = ? AND c.product_id IN (${placeholders})
+    `;
+
+    const params = [user.id, ...idsArray];
+
+    db.all(selectQuery, params, (err, items) => {
+        if (err) {
+            console.error("결제 DB 오류:", err.message);
+            return res.send(`<script>alert("DB 조회 중 오류가 발생했습니다: ${err.message}"); history.back();</script>`);
+        }
+
+        if (items.length === 0) {
+            return res.send('<script>alert("결제할 상품 정보를 찾을 수 없습니다."); location.href="./";</script>');
+        }
+
+        // 총 결제 금액 계산 및 재고 확인
+        let grandTotal = 0;
+        for (let item of items) {
+            if (item.stock < item.quantity) {
+                return res.send(`<script>alert("${item.name}의 재고가 부족합니다. (현재 재고: ${item.stock}개)"); location.href="./";</script>`);
+            }
+            grandTotal += item.price * item.quantity;
+        }
+
+        // 3% 적립금 계산 (소수점 버림)
+        const earnedPoints = Math.floor(grandTotal * 0.03);
+
+        db.serialize(() => {
+            db.run('BEGIN TRANSACTION');
+
+            let hasError = false;
+
+            items.forEach(item => {
+                const totalPrice = item.price * item.quantity;
+                
+                // 1. 주문 내역 저장
+                db.run('INSERT INTO orders (user_id, product_name, price, quantity) VALUES (?, ?, ?, ?)',
+                    [user.id, item.name, totalPrice, item.quantity], 
+                    (err) => { if (err) hasError = true; }
+                );
+
+                // 2. 상품 재고 차감
+                db.run('UPDATE products SET stock = stock - ? WHERE id = ?', 
+                    [item.quantity, item.id], 
+                    (err) => { if (err) hasError = true; }
+                );
+            });
+
+            // 3. 결제된 장바구니 비우기
+            db.run(`DELETE FROM cart_items WHERE user_id = ? AND product_id IN (${placeholders})`, params, (err) => {
+                if (err) hasError = true;
+            });
+
+            // 4. 유저에게 적립금 지급
+            db.run('UPDATE users SET points = COALESCE(points, 0) + ? WHERE id = ?', [earnedPoints, user.id], (err) => {
+                if (err) hasError = true;
+            });
+
+            db.get('SELECT 1', (err) => {
+                if (hasError) {
+                    console.error("❌ 결제 중 오류 발생. 데이터를 롤백합니다.");
+                    db.run('ROLLBACK');
+                    return res.send('<script>alert("결제 처리 중 서버 오류가 발생했습니다. 처음부터 다시 시도해주세요."); history.back();</script>');
+                } else {
+                    console.log(`✅ 결제 성공. (적립금 ${earnedPoints}P 지급)`);
+                    db.run('COMMIT');
+                    return res.send(`<script>alert("결제가 완료되었습니다!\\n적립금 ${earnedPoints.toLocaleString()}P가 지급되었습니다."); location.href="../user/orders";</script>`);
+                }
+            });
+        });
+    });
 });
 
 module.exports = router;
