@@ -75,7 +75,7 @@ router.post('/login', (req, res) => {
                 address: user.address
             };
             // 💡 [/] -> [../] 상위 루트 경로 이동
-            res.redirect('/');
+            res.redirect('/stud6');
         } else {
             res.send('<script>alert("비밀번호가 틀렸습니다."); history.back();</script>');
         }
