@@ -4,8 +4,9 @@ const path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const session = require('express-session');
-const boardRouter = require('./routes/board');
+const http = require('http'); // 서버 실행을 위해 http 모듈 추가
 
+const boardRouter = require('./routes/board');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const userRouter = require('./routes/user');
@@ -33,10 +34,38 @@ app.use(session({
   saveUninitialized: true,
 }));
 
-// 전역 로컬 변수 설정 미들웨어 (라우터들보다 위에 위치)
+// 전역 로컬 변수 설정 미들웨어
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
   next();
+});
+
+// ==========================================
+// ✨ [친구 코드 적용: 포트 자동 연산 및 URL 조작]
+// ==========================================
+
+const currentStudent = process.env.USER || '';
+const isServerEnvironment = currentStudent.startsWith('stud');
+
+// 포트 자동 연산 (예: stud6 -> 3006)
+let defaultPort = '3000';
+if (isServerEnvironment) {
+    const match = currentStudent.match(/stud(\d+)/);
+    if (match) {
+        defaultPort = String(3000 + parseInt(match[1], 10));
+    }
+}
+const port = normalizePort(process.env.PORT || defaultPort);
+app.set('port', port);
+
+// ⭕ [404 우회 미들웨어] Nginx가 던지는 /stud6 경로를 내부적으로 무시하도록 조작
+app.use((req, res, next) => {
+    const parts = req.url.split('/').filter(Boolean);
+    // 라우터 키워드가 아니면(즉, stud6 등 계정명이면) 잘라냄
+    if (parts.length > 0 && !['user', 'board', 'products', 'cart', 'order', 'notice', 'admin', 'users'].includes(parts[0])) {
+        req.url = '/' + parts.slice(1).join('/');
+    }
+    next();
 });
 
 // 라우터 연결
@@ -45,7 +74,6 @@ app.use('/users', usersRouter);
 app.use('/user', userRouter);
 app.use('/board', boardRouter);
 
-// 💡 [/login] 접속 시 무조건 절대 경로(/user/login)로 튕기던 곳을 상대 경로(./user/login)로 안전하게 변경
 app.get('/login', (req, res) => {
   res.redirect('./user/login');
 });
@@ -56,20 +84,37 @@ app.use('/order', orderRouter);
 app.use('/notice', noticeRouter);
 app.use('/admin', adminRouter);
 
-
-// [1] 404 에러를 잡아 에러 핸들러로 전달하는 미들웨어
+// 404 에러 핸들러
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// [2] 최종 에러 핸들러 (모든 404, 500 에러는 여기서 처리되어 error.ejs를 보여줍니다)
+// 최종 에러 핸들러
 app.use(function(err, req, res, next) {
-  // 개발 환경(development)에서만 상세한 에러 출력
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
   res.status(err.status || 500);
   res.render('error');
 });
+
+// ==========================================
+// 서버 진짜 구동하기 (listen 코드 내장)
+// ==========================================
+const server = http.createServer(app);
+server.listen(port, () => {
+    console.log(`\n==================================================`);
+    console.log(`[*] 학과 실습 서버 멀티유저 라우팅 유연화 세팅 완료!`);
+    console.log(`[*] 현재 실행 계정: ${currentStudent || '로컬 PC 개발 환경'}`);
+    console.log(`[*] 오픈된 포트: ${port}번`);
+    console.log(`[*] 접속 테스트 주소: http://164.125.249.71/${currentStudent || ''}`);
+    console.log(`==================================================\n`);
+});
+
+function normalizePort(val) {
+    var port = parseInt(val, 10);
+    if (isNaN(port)) return val;
+    if (port >= 0) return port;
+    return false;
+}
 
 module.exports = app;

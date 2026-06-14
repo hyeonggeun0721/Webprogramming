@@ -26,11 +26,13 @@ var server = http.createServer(app);
  */
 
 // 💡 중복 실행되던 app.listen을 지우고, server.listen 하나로 통합
+/*
 server.listen(port, () => {
     console.log(`Server Running on port : ${port}`);
 });
 server.on('error', onError);
 server.on('listening', onListening);
+*/
 
 /**
  * Normalize a port into a number, string, or false.
@@ -91,3 +93,23 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
+
+// 💡 여기서부터 아래 코드 추가
+process.on('uncaughtException', (err) => {
+  console.error('\n🚨 [Uncaught Exception] 치명적 에러 발생:');
+  console.error(err);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('\n🚨 [Unhandled Rejection] 처리되지 않은 비동기 에러:');
+  console.error('Reason:', reason);
+});
