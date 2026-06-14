@@ -103,25 +103,25 @@
 
   <div class="top-bar">
       <% if (!user) { %>
-          <a href="/user/login" class="btn-login">로그인</a>
-          <a href="/user/register" class="btn-login">회원가입</a>
+          <a href="./user/login" class="btn-login">로그인</a>
+          <a href="./user/register" class="btn-login">회원가입</a>
       <% } else { %>
           <span><strong><%= user.name %></strong>님 환영합니다!</span>
-          <a href="/user/logout" class="btn-logout">로그아웃</a>
+          <a href="./user/logout" class="btn-logout">로그아웃</a>
       <% } %>
   </div>
 
   <header class="main-header">
-    <a href="/" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
+    <a href="./" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
     <nav>
-      <a href="/">홈</a>
-      <a href="/products" style="color:var(--primary-color); font-weight: 700;">상품목록</a>
-      <a href="/cart">장바구니</a>
-      <a href="/board">고객센터</a>
-      <a href="/notice">공지사항</a>
-      <a href="/user/mypage">마이페이지</a>
-      <a href="/user/wishlist">위시리스트</a>
-      <a href="/user/orders">주문조회</a>
+      <a href="./">홈</a>
+      <a href="./products" style="color:var(--primary-color); font-weight: 700;">상품목록</a>
+      <a href="./cart">장바구니</a>
+      <a href=".board">고객센터</a>
+      <a href="./notice">공지사항</a>
+      <a href="./user/mypage">마이페이지</a>
+      <a href="./user/wishlist">위시리스트</a>
+      <a href="./user/orders">주문조회</a>
       <% if (typeof user !== 'undefined' && user && user.username === 'admin') { %>
         <a href="/admin" class="admin-link">[관리자 모드]</a>
       <% } %>
@@ -143,7 +143,7 @@
                 <i class="fa-solid fa-star"></i> 추천
               </div>
 
-              <img src="/images/<%= p.image_url || 'default.png' %>" alt="<%= p.name %>">
+              <img src="./images/<%= p.image_url || 'default.png' %>" alt="<%= p.name %>">
               
               <% 
                 let isWished = false;
@@ -152,7 +152,7 @@
                 }
               %>
 
-              <form action="/user/wishlist/toggle" method="POST" class="heart-wish-form">
+              <form action="./user/wishlist/toggle" method="POST" class="heart-wish-form">
                   <input type="hidden" name="productId" value="<%= p.id %>">
                   <button type="submit" class="heart-wish-btn <%= isWished ? 'active' : '' %>" title="찜하기">
                       <i class="<%= isWished ? 'fa-solid' : 'fa-regular' %> fa-heart"></i>
@@ -165,7 +165,7 @@
             <strong>₩<%= p.price.toLocaleString() %></strong>
 
             <div class="action-buttons">
-                <form action="/cart/add" method="POST" style="margin: 0;">
+                <form action="./cart/add" method="POST" style="margin: 0;">
                     <input type="hidden" name="productId" value="<%= p.id %>">
                     <button type="submit" class="cart-button">
                       <i class="fa-solid fa-cart-plus"></i> 장바구니 담기
@@ -182,7 +182,7 @@
     </div>
 
     <div class="view-all-container">
-      <a href="/products/all" class="view-all-btn">
+      <a href="./products/all" class="view-all-btn">
         더 많은 상품 전체보기 <i class="fa-solid fa-arrow-right"></i>
       </a>
     </div>
