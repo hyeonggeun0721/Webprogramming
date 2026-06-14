@@ -348,10 +348,10 @@
   <div class="top-bar">
     <% if (!user) { %>
         <a href="../login" class="btn-login">로그인</a>
-        <a href="../user/register" class="btn-login">회원가입</a>
+        <a href="../register_step1" class="btn-login">회원가입</a>
     <% } else { %>
         <span><strong><%= user.name %></strong>님 환영합니다!</span>
-        <a href="../user/logout" class="btn-logout">로그아웃</a>
+        <a href="../" class="btn-logout">로그아웃</a>
     <% } %>
   </div>
 
@@ -363,9 +363,9 @@
       <a href="../cart">장바구니</a>
       <a href="./" style="color: var(--primary-color); font-weight: 700;">고객센터</a>
       <a href="../notice">공지사항</a>
-      <a href="../user/mypage">마이페이지</a>
-      <a href="../user/wishlist">위시리스트</a>
-      <a href="../user/orders">주문조회</a>
+      <a href="../mypage">마이페이지</a>
+      <a href="../wishlist">위시리스트</a>
+      <a href="../orders">주문조회</a>
       
       <% if (typeof user !== 'undefined' && user && user.username === 'admin') { %>
         <a href="../admin" class="admin-link">[관리자 모드]</a>
@@ -400,7 +400,7 @@
         <% } %>
       </form>
 
-      <a href="./new" class="btn-write" style="white-space: nowrap;">
+      <a href="./board_write" class="btn-write" style="white-space: nowrap;">
         <i class="fa-solid fa-pen-to-square"></i> 문의하기
       </a>
 
@@ -441,7 +441,7 @@
                       <% } %>
                     <% } %>
   
-                    <a href="./view/<%= post.id %>" class="post-title" style="display: inline;">
+                    <a href="./board_view post.id %>" class="post-title" style="display: inline;">
                       <% 
                         let displayTitle = post.title;
                         if (typeof searchKeyword !== 'undefined' && searchKeyword) {
