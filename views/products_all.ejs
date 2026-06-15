@@ -194,7 +194,7 @@
                 }
               %>
 
-              <form action="/stud6/user/wishlist/toggle" method="POST" class="heart-wish-form">
+              <form action="./user/wishlist/toggle" method="POST" class="heart-wish-form">
                   <input type="hidden" name="productId" value="<%= p.id %>">
                   <button type="submit" class="heart-wish-btn <%= isWished ? 'active' : '' %>" title="찜하기">
                       <i class="<%= isWished ? 'fa-solid' : 'fa-regular' %> fa-heart"></i>
