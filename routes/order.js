@@ -154,7 +154,7 @@ router.post('/process', (req, res) => {
                     db.run('COMMIT'); 
                     // 💡 [/order/complete] -> [./complete] 현재 폴더(/order) 기준 주소 호출로 변경
                     // order.js 파일 내의 결제 성공 로직 수정
-                    return res.send(`<script>alert("결제가 완료되었습니다!\\n적립금 ${earnedPoints.toLocaleString()}P가 지급되었습니다."); location.href="/order/complete";</script>`);
+                    return res.send(`<script>alert("결제가 완료되었습니다!\\n적립금 ${earnedPoints.toLocaleString()}P가 지급되었습니다."); location.href="/stud6/order/complete";</script>`);
                 }
             });
         });
