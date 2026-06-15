@@ -218,7 +218,7 @@
     });
 
     function closeCartModal() { document.getElementById('cartModal').classList.remove('show'); }
-    document.querySelectorAll('form[action="/cart/add"]').forEach(form => {
+    document.querySelectorAll('form[action="/stud6/cart/add"]').forEach(form => {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             fetch(this.action, {
