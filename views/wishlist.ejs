@@ -287,7 +287,7 @@
             <% items.forEach(item => { %>
                 <article class="product-card">
                     <div class="image-container">
-                        <img src="./images/<%= item.image || 'default.png' %>" alt="<%= item.product_name %>">
+                        <img src="../images/<%= item.image || 'default.png' %>" alt="<%= item.product_name %>">
                         
                         <form action="./toggle" method="POST" class="heart-wish-form">
                             <input type="hidden" name="productId" value="<%= item.product_id %>">
