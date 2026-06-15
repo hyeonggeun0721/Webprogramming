@@ -200,7 +200,7 @@
             const icon = btn.querySelector('i');
             const formData = new URLSearchParams(new FormData(this));
 
-            fetch('/user/wishlist/toggle', {
+            fetch('/stud6/user/wishlist/toggle', {
                 method: 'POST', body: formData, headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             })
             .then(res => res.json())
