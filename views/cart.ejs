@@ -119,11 +119,11 @@
 <body>
   <div class="top-bar">
     <% if (!user) { %>
-        <a href="../login" class="btn-login">로그인</a>
-        <a href="../register_step1" class="btn-login">회원가입</a>
+        <a href="./user/login" class="btn-login">로그인</a>
+        <a href="./user/register" class="btn-login">회원가입</a>
     <% } else { %>
         <span><strong><%= user.name %></strong>님 환영합니다!</span>
-        <a href="../" class="btn-logout">로그아웃</a>
+        <a href="./user/logout" class="btn-logout">로그아웃</a>
     <% } %>
   </div>
 
@@ -132,7 +132,7 @@
     <nav>
       <a href="./">홈</a>
       <a href="./products">상품목록</a>
-      <a href="./" style="color: var(--primary-color); font-weight: 700;">장바구니</a>
+      <a href="./cart" style="color: var(--primary-color); font-weight: 700;">장바구니</a>
       <a href="./board">고객센터</a>
       <a href="./notice">공지사항</a>
       <a href="./mypage">마이페이지</a>

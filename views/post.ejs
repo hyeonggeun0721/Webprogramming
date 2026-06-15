@@ -83,27 +83,27 @@
 
   <div class="top-bar">
     <% if (!user) { %>
-        <a href="<%= post ? '../../login' : '../login' %>" class="btn-login">로그인</a>
-        <a href="<%= post ? '../../user/register' : '../user/register' %>" class="btn-login">회원가입</a>
+        <a href="/stud6/login" class="btn-login">로그인</a>
+        <a href="/stud6/user/register" class="btn-login">회원가입</a>
     <% } else { %>
         <span><strong><%= user.name %></strong>님 환영합니다!</span>
-        <a href="<%= post ? '../../user/logout' : '../user/logout' %>" class="btn-logout">로그아웃</a>
+        <a href="/stud6/user/logout" class="btn-logout">로그아웃</a>
     <% } %>
   </div>
 
   <header class="main-header">
-    <a href="<%= post ? '../../' : '../' %>" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
+    <a href="/stud6/" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
     <nav>
-      <a href="<%= post ? '../../' : '../' %>">홈</a>
-      <a href="<%= post ? '../../products' : '../products' %>">상품목록</a>
-      <a href="<%= post ? '../../cart' : '../cart' %>">장바구니</a>
-      <a href="<%= post ? '../../board' : '../board' %>" style="color: var(--primary-color); font-weight: 700;">고객센터</a>
-      <a href="<%= post ? '../../notice' : '../notice' %>">공지사항</a>
-      <a href="<%= post ? '../../user/mypage' : '../user/mypage' %>">마이페이지</a>
-      <a href="<%= post ? '../../user/wishlist' : '../user/wishlist' %>">위시리스트</a>
-      <a href="<%= post ? '../../user/orders' : '../user/orders' %>">주문조회</a>
+      <a href="/stud6/">홈</a>
+      <a href="/stud6/products">상품목록</a>
+      <a href="/stud6/cart">장바구니</a>
+      <a href="/stud6/board" style="color: var(--primary-color); font-weight: 700;">고객센터</a>
+      <a href="/stud6/notice">공지사항</a>
+      <a href="/stud6/user/mypage">마이페이지</a>
+      <a href="/stud6/user/wishlist">위시리스트</a>
+      <a href="/stud6/user/orders">주문조회</a>
       <% if (typeof user !== 'undefined' && user && user.username === 'admin') { %>
-        <a href="<%= post ? '../../admin' : '../admin' %>" class="admin-link">[관리자 모드]</a>
+        <a href="/stud6/admin'" class="admin-link">[관리자 모드]</a>
       <% } %>
     </nav>
   </header>
