@@ -165,7 +165,7 @@
             <strong>₩<%= p.price.toLocaleString() %></strong>
 
             <div class="action-buttons">
-                <form action="/stud6/user/cart/add" method="POST" style="margin: 0;">
+                <form action="/stud6/cart/add" method="POST" style="margin: 0;">
                     <input type="hidden" name="productId" value="<%= p.id %>">
                     <button type="submit" class="cart-button">
                       <i class="fa-solid fa-cart-plus"></i> 장바구니 담기
