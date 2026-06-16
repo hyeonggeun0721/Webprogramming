@@ -54,7 +54,9 @@ router.post('/add', (req, res) => {
 // 장바구니 목록 조회
 router.get('/', (req, res) => {
     const user = req.session.user;
-    if (!user) return res.redirect('./user/login');
+    if (!user) {
+        return res.send('<script>alert("로그인이 필요합니다."); location.href="./login";</script>');
+    }
 
     const query = `
     SELECT p.id, p.name, p.price, p.image_url, c.quantity
@@ -115,7 +117,7 @@ router.post('/delete', (req, res) => {
 // 1. 장바구니에서 선택된 상품 정보를 받아 주문/결제(체크아웃) 페이지 렌더링
 router.post('/checkout', (req, res) => {
     const user = req.session.user;
-    if (!user) return res.redirect('./user/login');
+    if (!user) return res.redirect('../user/login');
 
     const checkedIds = req.body.checkedIds;
 
@@ -153,7 +155,7 @@ router.post('/checkout', (req, res) => {
 // 2. 체크아웃 페이지에서 '최종 결제하기' 폼 전송 시 실제 재고 차감 및 주문 처리
 router.post('/process', (req, res) => {
     const user = req.session.user;
-    if (!user) return res.redirect('./user/login');
+    if (!user) return res.redirect('../user/login');
 
     const { checkedIds, phone, address, memo } = req.body;
 
