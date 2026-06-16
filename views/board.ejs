@@ -474,7 +474,7 @@
                   <div class="action-links">
                     <% if (isAuthor) { %>
                       <a href="/stud6/board/edit/<%= post.id %>" class="btn btn-edit">
-                        <i class="fa-solid fa-pen-nib"></i> 수정
+                        <i class="fa-solid fa-pen-nib"></i>
                       </a>
                     <% } else { %>
                       <span class="disabled" title="본인만 수정 가능합니다." style="color: #cbd5e1; cursor: not-allowed;"><i class="fa-solid fa-pen-nib"></i></span>
@@ -485,7 +485,7 @@
                     <% if (isAuthor || isAdmin) { %>
                       <a href="/stud6/board/delete/<%= post.id %>" class="btn btn-delete" 
                         onclick="return confirm('이 게시글을 정말 삭제하시겠습니까?');">
-                        <i class="fa-regular fa-trash-can"></i> 삭제
+                        <i class="fa-regular fa-trash-can"></i>
                       </a>
                     <% } else { %>
                       <span class="disabled" style="color: #cbd5e1; cursor: not-allowed;"><i class="fa-solid fa-trash-can"></i></span>
