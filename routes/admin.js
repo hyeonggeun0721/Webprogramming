@@ -199,20 +199,23 @@ router.post('/user/delete', (req, res) => {
 // 주문 상태 변경
 router.post('/order/status', (req, res) => {
     const user = req.session.user;
-    // 💡 [/] -> [../] 상위 상대 경로 변경
-    if (!user || user.username !== 'admin') return res.redirect('../');
+    
+    // 💡 1. 권한이 없으면 무조건 메인(홈) 절대 경로로 이동
+    if (!user || user.username !== 'admin') {
+        return res.send('<script>alert("관리자 권한이 필요합니다."); location.href="/stud6/";</script>');
+    }
 
-    const { orderId, status, redirect } = req.body;
+    const { orderId, status } = req.body;
+    
     db.run('UPDATE orders SET status = ? WHERE id = ?', [status, orderId], (err) => {
-        // 💡 [/admin/orders] -> [./orders] 내 레벨 주소 변경
-        if (err) return res.send('<script>alert("상태 변경에 실패했습니다."); location.href="./orders";</script>');
-        
-        // 💡 동적 리다이렉트 문자열 분기 처리 (보통 관리자 페이지 내에서 이동하므로 /admin 제거 프로세스 결합)
-        let targetRedirect = './orders';
-        if (redirect && redirect.startsWith('/admin/')) {
-            targetRedirect = redirect.replace('/admin/', './');
+        // 💡 2. DB 에러 시 절대 경로로 되돌아가기
+        if (err) {
+            console.error("주문 상태 변경 에러:", err);
+            return res.send('<script>alert("상태 변경에 실패했습니다."); location.href="/stud6/admin/order/orders";</script>');
         }
-        res.redirect(targetRedirect);
+        
+        // 💡 3. 불필요한 문자열 치환 로직 싹 지우고 절대 경로로 즉시 리다이렉트
+        res.redirect('/stud6/admin/order/orders');
     });
 });
 
