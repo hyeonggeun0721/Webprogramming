@@ -113,28 +113,36 @@ router.get('/mypage', (req, res) => {
 
 // 개인정보 수정 처리
 router.post('/update', async (req, res) => {
-    // 💡 [/user/login] -> [./login] 리다이렉트 상대 경로 변경
+    // 💡 1. 누락되었던 세션 유저 변수 선언 추가!
+    const user = req.session.user;
+
+    // 💡 2. 절대 경로로 리다이렉트 수정
     if (!user) {
-        return res.send('<script>alert("로그인이 필요합니다."); location.href="./login";</script>');
+        return res.send('<script>alert("로그인이 필요합니다."); location.href="/stud6/user/login";</script>');
     }
 
     const { name, password, phone, address } = req.body;
-    const userId = req.session.user.id;
+    const userId = user.id;
 
     if (password) {
         // 비밀번호 변경 시
-        const hashedPassword = await bcrypt.hash(password, 10);
-        db.run(
-            'UPDATE users SET name = ?, password = ?, phone = ?, address = ? WHERE id = ?',
-            [name, hashedPassword, phone, address, userId],
-            (err) => {
-                if (err) return res.send('<script>alert("수정 실패"); history.back();</script>');
-                
-                req.session.destroy();
-                // 💡 [/user/login] -> [./login] 변경
-                res.send('<script>alert("정보가 수정되었습니다. 다시 로그인해주세요."); location.href="./login";</script>');
-            }
-        );
+        try {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            db.run(
+                'UPDATE users SET name = ?, password = ?, phone = ?, address = ? WHERE id = ?',
+                [name, hashedPassword, phone, address, userId],
+                (err) => {
+                    if (err) return res.send('<script>alert("수정 실패"); history.back();</script>');
+                    
+                    req.session.destroy();
+                    // 💡 3. 절대 경로 적용
+                    res.send('<script>alert("정보가 수정되었습니다. 다시 로그인해주세요."); location.href="/stud6/user/login";</script>');
+                }
+            );
+        } catch (error) {
+            console.error("비밀번호 암호화 에러:", error);
+            res.send('<script>alert("서버 오류가 발생했습니다."); history.back();</script>');
+        }
     } else {
         // 비밀번호 미변경 시
         db.run(
@@ -146,8 +154,8 @@ router.post('/update', async (req, res) => {
                 req.session.user.name = name;
                 req.session.user.phone = phone;
                 req.session.user.address = address;
-                // 💡 [/user/mypage] -> [./mypage] 변경
-                res.send('<script>alert("정보가 수정되었습니다."); location.href="./mypage";</script>');
+                // 💡 4. 절대 경로 적용
+                res.send('<script>alert("정보가 수정되었습니다."); location.href="/stud6/user/mypage";</script>');
             }
         );
     }
