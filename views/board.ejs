@@ -396,7 +396,7 @@
         <button type="submit" class="btn-search"><i class="fa-solid fa-magnifying-glass"></i></button>
         
         <% if (typeof searchKeyword !== 'undefined' && searchKeyword) { %>
-          <a href="./" style="font-size:0.9em; color:var(--text-gray); white-space: nowrap; margin-left: 5px;">[초기화]</a>
+          <a href="/stud6/board" style="font-size:0.9em; color:var(--text-gray); white-space: nowrap; margin-left: 5px;">[초기화]</a>
         <% } %>
       </form>
 
@@ -441,7 +441,7 @@
                       <% } %>
                     <% } %>
   
-                    <a href="./board_view post.id %>" class="post-title" style="display: inline;">
+                    <a href="/stud6/board/view/<%= post.id %>" class="post-title" style="display: inline;">
                       <% 
                         let displayTitle = post.title;
                         if (typeof searchKeyword !== 'undefined' && searchKeyword) {
