@@ -212,7 +212,7 @@
             <div class="order-group">
                 <div class="order-group-header">
                     <span class="order-date"><%= formattedDate %></span>
-                    <a href="#" class="order-detail-link">주문 상세 <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i></a>
+                    <a href="/stud6/user/order_detail?date=<%= group.date %>" class="order-detail-link">주문 상세 <i class="fa-solid fa-chevron-right" style="font-size: 10px;"></i></a>
                 </div>
 
                 <% group.items.forEach(item => { %>
