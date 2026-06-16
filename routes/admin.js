@@ -211,11 +211,11 @@ router.post('/order/status', (req, res) => {
         // 💡 2. DB 에러 시 절대 경로로 되돌아가기
         if (err) {
             console.error("주문 상태 변경 에러:", err);
-            return res.send('<script>alert("상태 변경에 실패했습니다."); location.href="/stud6/admin/order/orders";</script>');
+            return res.send('<script>alert("상태 변경에 실패했습니다."); location.href="/stud6/admin/orders";</script>');
         }
         
         // 💡 3. 불필요한 문자열 치환 로직 싹 지우고 절대 경로로 즉시 리다이렉트
-        res.redirect('/stud6/admin/order/orders');
+        res.redirect('/stud6/admin/orders');
     });
 });
 
