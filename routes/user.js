@@ -114,7 +114,9 @@ router.get('/mypage', (req, res) => {
 // 개인정보 수정 처리
 router.post('/update', async (req, res) => {
     // 💡 [/user/login] -> [./login] 리다이렉트 상대 경로 변경
-    if (!req.session.user) return res.redirect('./login');
+    if (!user) {
+        return res.send('<script>alert("로그인이 필요합니다."); location.href="./login";</script>');
+    }
 
     const { name, password, phone, address } = req.body;
     const userId = req.session.user.id;
@@ -155,7 +157,9 @@ router.post('/update', async (req, res) => {
 router.post('/delete-account', (req, res) => {
     const user = req.session.user;
     // 💡 [/user/login] -> [./login] 리다이렉트 상대 경로 변경
-    if (!user) return res.redirect('./login');
+    if (!user) {
+        return res.send('<script>alert("로그인이 필요합니다."); location.href="./login";</script>');
+    }
 
     if (user.username === 'admin') {
         return res.send('<script>alert("관리자 계정은 탈퇴할 수 없습니다."); history.back();</script>');
@@ -228,8 +232,9 @@ router.post('/wishlist/toggle', (req, res) => {
 // 주문 조회 라우터 
 router.get('/orders', (req, res) => {
     const user = req.session.user;
-    // 💡 [/login] -> [./login] 상대 경로 리다이렉트 변경
-    if (!user) return res.redirect('./login');
+    if (!user) {
+        return res.send('<script>alert("로그인이 필요합니다."); location.href="./login";</script>');
+    }
 
     const sql = `
         SELECT o.*, p.image_url 
