@@ -431,7 +431,9 @@
                       <i class="fa-solid fa-share reply-icon" style="transform: rotate(180deg); margin-right: 8px;"></i>
                     <% } %>
   
-                    <span class="category-badge"><%= post.category || '기타' %></span>
+                    <% if (!post.parent_id) { %>
+                      <span class="category-badge"><%= post.category || '기타' %></span>
+                    <% } %>
   
                     <% if (!post.parent_id) { %>
                       <% if (post.status === '답변 완료') { %>
