@@ -296,9 +296,8 @@
                   <% if (isReplyAuthor) { %>
                     <a href="/stud6/board/edit/<%= reply.id %>" class="btn-reply-action">수정</a>
                   <% } %>
-                  <a href="javascript:void(0);" 
-                    onclick="if(confirm('삭제하시겠습니까?')) { location.href='/stud6/board/delete/<%= post.id %>'; }" 
-                    class="btn btn-delete">
+                  <a href="/stud6/board/delete/<%= post.id %>" class="btn btn-delete" 
+                    onclick="return confirm('이 게시글을 정말 삭제하시겠습니까?');">
                     <i class="fa-regular fa-trash-can"></i> 삭제
                   </a>
                 </div>
