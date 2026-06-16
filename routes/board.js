@@ -199,8 +199,7 @@ router.post('/edit/:id', (req, res) => {
 // [8] 게시글/답글 삭제 처리
 router.get('/delete/:id', (req, res) => {
     if (!req.session.user) {
-        // 💡 [/user/login] -> [../../login] 변경
-        return res.send('<script>alert("로그인이 필요합니다."); location.href="../../login";</script>');
+        return res.send('<script>alert("로그인이 필요합니다."); location.href="/stud6/user/login";</script>');
     }
 
     const postId = req.params.id;
@@ -216,28 +215,21 @@ router.get('/delete/:id', (req, res) => {
             return res.send('<script>alert("삭제 권한이 없습니다."); history.back();</script>');
         }
 
-        // 1차: 게시글 또는 답글 삭제 실행
         db.run('DELETE FROM board WHERE id = ? OR parent_id = ?', [postId, postId], (deleteErr) => {
             if (deleteErr) return res.send('삭제 실패: ' + deleteErr.message);
             
-            // 2차: 방금 지운 글이 '답글'이었다면, 남은 답글이 있는지 확인
             if (post.parent_id) {
                 db.get('SELECT COUNT(*) AS count FROM board WHERE parent_id = ?', [post.parent_id], (countErr, row) => {
-                    // 남은 답글이 0개라면 원글 상태를 다시 '답변 대기'로 되돌림
                     if (!countErr && row && row.count === 0) {
                         db.run("UPDATE board SET status = '답변 대기' WHERE id = ?", [post.parent_id], () => {
-                            // 💡 [/board] -> [../] 상위 목록 루트 이동
-                            res.redirect('../');
+                            res.redirect('/stud6/board'); // 절대 경로로 이동
                         });
                     } else {
-                        // 💡 [/board] -> [../] 상위 목록 루트 이동
-                        res.redirect('../');
+                        res.redirect('/stud6/board'); // 절대 경로로 이동
                     }
                 });
             } else {
-                // 원글을 지운 경우는 상태 업데이트 없이 바로 목록으로 이동
-                // 💡 [/board] -> [../] 상위 목록 루트 이동
-                res.redirect('../');
+                res.redirect('/stud6/board'); // 절대 경로로 이동
             }
         });
     });
