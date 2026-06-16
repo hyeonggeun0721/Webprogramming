@@ -326,12 +326,12 @@
         <button type="submit" class="btn-search"><i class="fa-solid fa-magnifying-glass"></i></button>
 
         <% if (typeof currentSearch !== 'undefined' && currentSearch) { %>
-          <a href="./" style="font-size:0.9em; color:var(--text-gray); white-space: nowrap; margin-left: 5px;">[초기화]</a>
+          <a href="/stud6/notice" style="font-size:0.9em; color:var(--text-gray); white-space: nowrap; margin-left: 5px;">[초기화]</a>
         <% } %>
       </form>
 
       <% if (typeof user !== 'undefined' && user && user.username === 'admin') { %>
-        <a href="./new" class="btn-write" style="white-space: nowrap;">
+        <a href="/stud6/notice/new" class="btn-write" style="white-space: nowrap;">
           <i class="fa-solid fa-bullhorn"></i> 공지 등록
         </a>
       <% } %>
