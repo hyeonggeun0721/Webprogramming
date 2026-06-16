@@ -19,7 +19,8 @@
 <body>
     <div class="edit-container">
         <h2>📝 공지사항 수정</h2>
-        <form action="../update" method="POST">
+        <!-- 서버의 공지사항 업데이트 라우터 경로에 맞게 절대 경로 지정 -->
+        <form action="/stud6/notice/update" method="POST">
             <input type="hidden" name="id" value="<%= notice.id %>">
             <div class="form-group">
                 <label>제목</label>
@@ -31,7 +32,7 @@
             </div>
             <div class="btn-box">
                 <button type="submit" class="btn-save">수정 완료</button>
-                <a href="../../../notice" class="btn-cancel">취소</a>
+                <a href="/stud6/notice" class="btn-cancel">취소</a>
             </div>
         </form>
     </div>
