@@ -58,12 +58,22 @@ if (isServerEnvironment) {
 const port = normalizePort(process.env.PORT || defaultPort);
 app.set('port', port);
 
-// ⭕ [404 우회 미들웨어] Nginx가 던지는 /stud6 경로를 내부적으로 무시하도록 조작
+// ==========================================
+// ⭕ [404 우회 미들웨어] Nginx가 던지는 /stud6 경로를 안전하게 무시
+// ==========================================
 app.use((req, res, next) => {
-    const parts = req.url.split('/').filter(Boolean);
-    // 라우터 키워드가 아니면(즉, stud6 등 계정명이면) 잘라냄
+    // 1. 쿼리스트링(? 뒤의 검색어 등)을 제외한 순수 경로만 추출
+    const purePath = req.url.split('?')[0]; 
+    const parts = purePath.split('/').filter(Boolean);
+    
+    // 2. 첫 번째 경로가 라우터 이름이 아니면 (즉, stud6 등 계정명이면)
     if (parts.length > 0 && !['user', 'board', 'products', 'cart', 'order', 'notice', 'admin', 'users'].includes(parts[0])) {
-        req.url = '/' + parts.slice(1).join('/');
+        const prefix = '/' + parts[0];
+        
+        // 3. 원래의 전체 주소(req.url)에서 계정명만 지우고 쿼리스트링은 그대로 살림
+        if (req.url.startsWith(prefix)) {
+            req.url = req.url.replace(prefix, '') || '/';
+        }
     }
     next();
 });
