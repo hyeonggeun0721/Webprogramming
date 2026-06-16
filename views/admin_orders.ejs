@@ -202,5 +202,39 @@
           if (scrollPos) { window.scrollTo(0, parseInt(scrollPos)); sessionStorage.removeItem('adminScrollPos'); }
       });
   </script>
+
+  <script>
+    // 1. 기존의 스크롤 복구 스크립트는 삭제 또는 주석 처리 (더 이상 필요 없음)
+    // window.addEventListener('beforeunload', ...
+    // window.addEventListener('pageshow', ...
+
+    // 2. 비동기 상태 변경 로직 추가
+    document.querySelectorAll('form[action="/stud6/admin/order/status"]').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // 💡 폼의 기본 동작인 '새로고침'을 완벽하게 차단
+
+            const formData = new URLSearchParams(new FormData(this));
+
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+            .then(res => {
+                // 서버 처리가 정상적으로 끝났다면 (리다이렉트 응답 포함)
+                if (res.ok || res.redirected) {
+                    alert('배송 상태가 성공적으로 변경되었습니다.');
+                } else {
+                    alert('상태 변경 중 오류가 발생했습니다.');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('통신 오류가 발생했습니다.');
+            });
+        });
+    });
+  </script>
+  
 </body>
 </html>
