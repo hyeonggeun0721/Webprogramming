@@ -229,7 +229,7 @@ router.post('/wishlist/toggle', (req, res) => {
 router.get('/orders', (req, res) => {
     const user = req.session.user;
     // 💡 [/login] -> [./login] 상대 경로 리다이렉트 변경
-    if (!user) return res.redirect('./user/login');
+    if (!user) return res.redirect('./login');
 
     const sql = `
         SELECT o.*, p.image_url 
