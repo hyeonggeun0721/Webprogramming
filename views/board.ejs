@@ -381,7 +381,7 @@
   <main>
     <div class="board-actions" style="margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
       
-      <form action="/stud6/board/new" method="GET" class="search-box" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+      <form action="/stud6/board" method="GET" class="search-box" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
         
         <select name="category" class="form-select">
             <option value="전체" <%= (typeof currentCategory !== 'undefined' && currentCategory === '전체') ? 'selected' : '' %>>전체 주제</option>
