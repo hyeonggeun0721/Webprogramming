@@ -434,8 +434,8 @@
                     <% if (!post.parent_id) { %>
                       <span class="category-badge"><%= post.category || '기타' %></span>
                     <% } %>
-  
-                    <% if (!post.parent_id) { %>
+    
+                    <% if (!post.parent_id && typeof user !== 'undefined' && user && user.username === 'admin') { %>
                       <% if (post.status === '답변 완료') { %>
                         <span class="status-badge status-completed">답변 완료</span>
                       <% } else { %>
