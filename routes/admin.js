@@ -176,23 +176,38 @@ router.get('/products', (req, res) => {
 // [3. 관리자 기능 처리 (POST/Action)]
 // ==========================================
 
-// 회원 강제 탈퇴
+// 회원 강제 탈퇴 (관련 주문 내역까지 삭제)
 router.post('/user/delete', (req, res) => {
     const user = req.session.user;
-    // 💡 [/] -> [../] 상위 상대 경로 변경
     if (!user || user.username !== 'admin') return res.redirect('../');
 
     const targetUserId = req.body.userId;
     if (user.id == targetUserId) {
-        // 💡 [/admin/users] -> [./users] 같은 레벨 상대 경로 매칭
         return res.send('<script>alert("관리자 계정은 삭제할 수 없습니다."); location.href="./users";</script>');
     }
 
-    db.run('DELETE FROM users WHERE id = ?', [targetUserId], (err) => {
-        // 💡 [/admin/users] -> [./users] 같은 레벨 상대 경로 매칭
-        if (err) return res.send('<script>alert("회원 삭제에 실패했습니다."); location.href="./users";</script>');
-        // 💡 [/admin/users] -> [./users] 리다이렉트 상대 경로 변경
-        res.redirect('./users');
+    // 💡 1. 순서가 중요합니다: 주문(자식) -> 회원(부모) 순으로 삭제해야 외래키 오류가 안 납니다.
+    db.serialize(() => {
+        db.run("BEGIN TRANSACTION");
+
+        // 주문 내역 먼저 삭제
+        db.run('DELETE FROM orders WHERE user_id = ?', [targetUserId], (err) => {
+            if (err) {
+                db.run("ROLLBACK");
+                return res.send('<script>alert("주문 내역 삭제 실패"); history.back();</script>');
+            }
+
+            // 그 다음 회원 삭제
+            db.run('DELETE FROM users WHERE id = ?', [targetUserId], (err) => {
+                if (err) {
+                    db.run("ROLLBACK");
+                    return res.send('<script>alert("회원 삭제 실패"); history.back();</script>');
+                }
+
+                db.run("COMMIT");
+                res.redirect('./users');
+            });
+        });
     });
 });
 
