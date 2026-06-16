@@ -185,8 +185,9 @@ router.post('/delete-account', (req, res) => {
 // 위시리스트 조회
 router.get('/wishlist', (req, res) => {
     const user = req.session.user;
-    // 💡 [/login] -> [./login] 상대 경로 리다이렉트 변경
-    if (!user) return res.redirect('./login');
+    if (!user) {
+        return res.send('<script>alert("로그인이 필요합니다."); location.href="./login";</script>');
+    }
 
     const query = `
         SELECT w.id, p.name AS product_name, p.price, p.image_url AS image, p.id AS product_id
@@ -228,7 +229,7 @@ router.post('/wishlist/toggle', (req, res) => {
 router.get('/orders', (req, res) => {
     const user = req.session.user;
     // 💡 [/login] -> [./login] 상대 경로 리다이렉트 변경
-    if (!user) return res.redirect('./login');
+    if (!user) return res.redirect('./user/login');
 
     const sql = `
         SELECT o.*, p.image_url 
