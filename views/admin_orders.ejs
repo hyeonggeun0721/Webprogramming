@@ -86,27 +86,27 @@
 
   <div class="top-bar">
     <% if (typeof user === 'undefined' || !user) { %>
-        <a href="../login" class="btn-login">로그인</a>
-        <a href="../user/register" class="btn-login">회원가입</a>
+        <a href="/stud6/user/login" class="btn-login">로그인</a>
+        <a href="/stud6/user/register" class="btn-login">회원가입</a>
     <% } else { %>
         <span><strong><%= user.name %></strong>님 환영합니다!</span>
-        <a href="../user/logout" class="btn-logout">로그아웃</a>
+        <a href="/stud6/user/logout" class="btn-logout">로그아웃</a>
     <% } %>
   </div>
 
   <header class="main-header">
-    <a href="../" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
+    <a href="/stud6/" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
     <nav>
-      <a href="../">홈</a>
-      <a href="../products">상품목록</a>
-      <a href="../cart">장바구니</a>
-      <a href="../board">고객센터</a>
-      <a href="../notice">공지사항</a>
-      <a href="../user/mypage">마이페이지</a>
-      <a href="../user/wishlist">위시리스트</a>
-      <a href="../user/orders">주문조회</a>
+      <a href="/stud6/">홈</a>
+      <a href="/stud6/products">상품목록</a>
+      <a href="/stud6/cart">장바구니</a>
+      <a href="/stud6/board">고객센터</a>
+      <a href="/stud6/notice">공지사항</a>
+      <a href="/stud6/user/mypage">마이페이지</a>
+      <a href="/stud6/user/wishlist">위시리스트</a>
+      <a href="/stud6/user/orders">주문조회</a>
       <% if (typeof user !== 'undefined' && user && user.username === 'admin') { %>
-        <a href="./" class="admin-link">[관리자 모드]</a>
+        <a href="/stud6/admin" class="admin-link">[관리자 모드]</a>
       <% } %>
     </nav>
   </header>
@@ -117,7 +117,7 @@
         <h2><i class="fa-solid fa-truck-fast"></i> 주문/배송 관리</h2>
         <p>고객들의 주문 내역 확인 및 배송 상태를 관리합니다.</p>
       </div>
-      <a href="./" class="btn-back"><i class="fa-solid fa-house"></i> 대시보드로</a>
+      <a href="/stud6/admin" class="btn-back"><i class="fa-solid fa-house"></i> 대시보드로</a>
     </div>
 
     <% if (!orders || orders.length === 0) { %>
@@ -151,7 +151,7 @@
                         <span class="order-date"><%= group.date %></span>
                         <span class="user-badge"><i class="fa-solid fa-user"></i> 회원 #<%= group.userId %></span>
                     </div>
-                    <a href="./order/view/<%= group.id %>" class="btn-detail">
+                    <a href="/stud6/admin/order/view/<%= group.id %>" class="btn-detail">
                         상세보기 <i class="fa-solid fa-arrow-right"></i>
                     </a>
                 </div>
@@ -159,7 +159,7 @@
                 <% group.items.forEach(item => { %>
                     <div class="order-item">
                         <div class="order-content">
-                            <img src="../images/<%= item.image_url || 'default.png' %>" class="product-img" alt="상품">
+                            <img src="/stud6/images/<%= item.image_url || 'default.png' %>" class="product-img" alt="상품">
                             
                             <div class="order-info">
                                 <div class="order-id-tag">주문번호 #<%= item.id %></div>
@@ -172,7 +172,7 @@
                         </div>
 
                         <div class="status-form-container">
-                            <form action="./order/status" method="POST" style="margin: 0; display: flex; gap: 8px;">
+                            <form action="/stud6/admin/order/status" method="POST" style="margin: 0; display: flex; gap: 8px;">
                                 <input type="hidden" name="orderId" value="<%= item.id %>">
                                 <select name="status" class="form-select">
                                     <option value="결제완료" <%= item.status === '결제완료' ? 'selected' : '' %>>결제완료</option>
