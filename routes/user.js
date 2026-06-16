@@ -316,4 +316,32 @@ router.post('/reset-pw', (req, res) => {
     });
 });
 
+// 주문 상세 조회 (간단 버전)
+router.get('/order_detail', (req, res) => {
+    const user = req.session.user;
+    if (!user) {
+        return res.send('<script>alert("로그인이 필요합니다."); location.href="/stud6/user/login";</script>');
+    }
+
+    const orderDate = req.query.date;
+
+    const sql = `
+        SELECT o.*, p.image_url 
+        FROM orders o 
+        LEFT JOIN products p ON TRIM(o.product_name) = TRIM(p.name) OR o.product_name LIKE '%' || p.name || '%'
+        WHERE o.user_id = ? AND o.order_date = ?
+    `;
+
+    db.all(sql, [user.id, orderDate], (err, orders) => {
+        if (err || !orders || orders.length === 0) {
+            return res.send('<script>alert("주문 정보를 불러올 수 없습니다."); history.back();</script>');
+        }
+        
+        // 총 결제 금액 계산
+        const totalPrice = orders.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
+
+        res.render('order_detail', { user, orders, orderDate, totalPrice });
+    });
+});
+
 module.exports = router;

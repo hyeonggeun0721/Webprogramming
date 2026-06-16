@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>주문 상세 - ECO-LIFE Mall</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root { --primary: #064E3B; --bg-light: #F8FAF9; --border: #E2E8F0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; }
+    body { background-color: var(--bg-light); color: #334155; }
+    .header-simple { background: var(--primary); padding: 15px 20px; color: white; text-align: center; font-weight: bold; font-size: 1.2rem; }
+    main { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+    .card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    h3 { border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 20px; color: var(--primary); }
+    .info-row { display: flex; margin-bottom: 12px; font-size: 15px; }
+    .info-label { width: 100px; font-weight: bold; color: #64748b; }
+    .product-list { border-top: 1px solid var(--border); padding-top: 15px; }
+    .product-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+    .product-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
+    .btn-back { display: block; text-align: center; background: var(--primary); color: white; padding: 15px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: 0.2s; }
+    .btn-back:hover { background: #059669; }
+  </style>
+</head>
+<body>
+
+  <div class="header-simple">
+    <i class="fa-solid fa-receipt"></i> 주문 상세 내역
+  </div>
+
+  <main>
+    <div class="card">
+      <h3>주문 정보</h3>
+      <div class="info-row"><div class="info-label">주문일자</div><div><%= new Date(orderDate).toLocaleDateString('ko-KR') %></div></div>
+      <div class="info-row"><div class="info-label">주문번호</div><div>ORD-<%= new Date(orderDate).getTime().toString().slice(-6) %>-<%= user.id %></div></div>
+      <div class="info-row"><div class="info-label">결제금액</div><div style="font-weight: bold; color: #ef4444;"><%= totalPrice.toLocaleString() %>원</div></div>
+    </div>
+
+    <div class="card">
+      <h3>배송지 정보</h3>
+      <div class="info-row"><div class="info-label">수령인</div><div><%= user.name %></div></div>
+      <div class="info-row"><div class="info-label">연락처</div><div><%= user.phone %></div></div>
+      <div class="info-row"><div class="info-label">배송주소</div><div><%= user.address %></div></div>
+    </div>
+
+    <div class="card">
+      <h3>주문 상품 (<%= orders.length %>건)</h3>
+      <div class="product-list">
+        <% orders.forEach(item => { %>
+          <div class="product-item">
+            <img src="/stud6/images/<%= item.image_url || 'default.png' %>" alt="<%= item.product_name %>">
+            <div>
+              <div style="font-weight: bold;"><%= item.product_name %></div>
+              <div style="font-size: 14px; color: #64748b;"><%= Number(item.price).toLocaleString() %>원 / <%= item.quantity || 1 %>개</div>
+              <div style="font-size: 13px; font-weight: bold; color: #3b82f6;"><%= item.status || '결제완료' %></div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+
+    <a href="/stud6/user/orders" class="btn-back">주문 목록으로 돌아가기</a>
+  </main>
+
+</body>
+</html>
