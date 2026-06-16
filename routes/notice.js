@@ -125,4 +125,25 @@ router.get('/view/:id', (req, res) => {
     });
 });
 
+// [6] 공지사항 수정 처리
+router.post('/update', (req, res) => {
+    const user = req.session.user;
+    
+    if (!user || user.username !== 'admin') {
+        return res.send('<script>alert("관리자 권한이 필요합니다."); location.href="/stud6/notice";</script>');
+    }
+
+    const { id, title, content } = req.body;
+
+    db.run('UPDATE notices SET title = ?, content = ? WHERE id = ?', [title, content, id], (err) => {
+        if (err) {
+            console.error("공지사항 수정 오류:", err);
+            return res.send('<script>alert("수정에 실패했습니다."); history.back();</script>');
+        }
+        
+        // 💡 수정 완료 후, 절대 경로를 이용해 해당 공지사항 상세 페이지로 다시 이동
+        res.redirect('/stud6/notice/view/' + id);
+    });
+});
+
 module.exports = router;
