@@ -254,22 +254,22 @@
 
       <div class="post-actions">
         <div>
-          <a href="../" class="btn btn-list"><i class="fa-solid fa-list"></i> 목록</a>
+          <a href="/stud6/board" class="btn btn-list"><i class="fa-solid fa-list"></i> 목록</a>
         </div>
 
         <div class="action-group">
-          <a href="../reply/<%= post.id %>" class="btn btn-reply"><i class="fa-solid fa-reply"></i> 답글</a>
+          <a href="/stud6/board/reply/<%= post.id %>" class="btn btn-reply"><i class="fa-solid fa-reply"></i> 답글</a>
 
           <% const isAuthor = typeof user !== 'undefined' && user && user.username === post.author; %>
           <% const isAdmin = typeof user !== 'undefined' && user && user.username === 'admin'; %>
           <% const isAnon = post.author === '익명'; %>
 
           <% if (isAuthor) { %>
-              <a href="../edit/<%= post.id %>" class="btn btn-edit"><i class="fa-solid fa-pen-nib"></i> 수정</a>
+              <a href="/stud6/board/edit/<%= post.id %>" class="btn btn-edit"><i class="fa-solid fa-pen-nib"></i> 수정</a>
           <% } %>
 
           <% if (isAuthor || (isAnon && isAdmin) || isAdmin) { %>
-              <a href="../delete/<%= post.id %>" class="btn btn-delete" onclick="return confirm('이 게시글을 정말 삭제하시겠습니까?');"><i class="fa-regular fa-trash-can"></i> 삭제</a>
+              <a href="/stud6/board/delete/<%= post.id %>" class="btn btn-delete" onclick="return confirm('이 게시글을 정말 삭제하시겠습니까?');"><i class="fa-regular fa-trash-can"></i> 삭제</a>
           <% } else { %>
               <span class="btn btn-delete disabled"><i class="fa-regular fa-trash-can"></i> 삭제</span>
           <% } %>
@@ -294,7 +294,7 @@
               <% if (isReplyAuthor || (isReplyAnon && isAdmin) || isAdmin) { %>
                 <div class="reply-actions">
                   <% if (isReplyAuthor) { %>
-                    <a href="../edit/<%= reply.id %>" class="btn-reply-action">수정</a>
+                    <a href="/stud6/board/edit/<%= reply.id %>" class="btn-reply-action">수정</a>
                   <% } %>
                   <a href="/stud6/board/delete/<%= post.id %>" class="btn btn-delete" 
                     onclick="return confirm('이 게시글을 정말 삭제하시겠습니까?');">
