@@ -347,28 +347,28 @@
 
   <div class="top-bar">
     <% if (!user) { %>
-        <a href="../login" class="btn-login">로그인</a>
-        <a href="../register_step1" class="btn-login">회원가입</a>
+        <a href="/stud6/user/login" class="btn-login">로그인</a>
+        <a href="/stud6/user/register" class="btn-login">회원가입</a>
     <% } else { %>
         <span><strong><%= user.name %></strong>님 환영합니다!</span>
-        <a href="../" class="btn-logout">로그아웃</a>
+        <a href="/stud6/user/logout" class="btn-logout">로그아웃</a>
     <% } %>
   </div>
 
   <header class="main-header">
-    <a href="../" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
+    <a href="/stud6/" class="logo"><i class="fa-solid fa-basket-shopping"></i> ECO-LIFE</a>
     <nav>
-      <a href="./">홈</a>
-      <a href="./products">상품목록</a>
-      <a href="./cart">장바구니</a>
-      <a href="./" style="color: var(--primary-color); font-weight: 700;">고객센터</a>
-      <a href="./notice">공지사항</a>
-      <a href="./mypage">마이페이지</a>
-      <a href="./wishlist">위시리스트</a>
-      <a href="./orders">주문조회</a>
+      <a href="/stud6/">홈</a>
+      <a href="/stud6/products">상품목록</a>
+      <a href="/stud6/cart">장바구니</a>
+      <a href="/stud6/board" style="color: var(--primary-color); font-weight: 700;">고객센터</a>
+      <a href="/stud6/notice">공지사항</a>
+      <a href="/stud6/user/mypage">마이페이지</a>
+      <a href="/stud6/user/wishlist">위시리스트</a>
+      <a href="/stud6/user/orders">주문조회</a>
       
       <% if (typeof user !== 'undefined' && user && user.username === 'admin') { %>
-        <a href="./admin" class="admin-link">[관리자 모드]</a>
+        <a href="/stud6/admin" class="admin-link">[관리자 모드]</a>
       <% } %>
     </nav>
   </header>
@@ -381,7 +381,7 @@
   <main>
     <div class="board-actions" style="margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
       
-      <form action="./" method="GET" class="search-box" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+      <form action="/stud6/board" method="GET" class="search-box" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
         
         <select name="category" class="form-select">
             <option value="전체" <%= (typeof currentCategory !== 'undefined' && currentCategory === '전체') ? 'selected' : '' %>>전체 주제</option>
@@ -501,18 +501,18 @@
         %>
 
         <% if (currentPage > 1) { %>
-            <a href="./?page=<%= currentPage - 1 %><%= queryStr %>" style="padding: 8px 12px; border: 1px solid #e2e8f0; text-decoration: none; color: #1e293b; border-radius: 4px;">이전</a>
+            <a href="/stud6/board?page=<%= currentPage - 1 %><%= queryStr %>" style="padding: 8px 12px; border: 1px solid #e2e8f0; text-decoration: none; color: #1e293b; border-radius: 4px;">이전</a>
         <% } %>
 
         <% for(let i = 1; i <= totalPages; i++) { %>
-            <a href="./?page=<%= i %><%= queryStr %>" 
+            <a href="/stud6/board?page=<%= i %><%= queryStr %>" 
               style="padding: 8px 12px; margin: 0 5px; border: 1px solid #e2e8f0; text-decoration: none; border-radius: 4px; <%= currentPage === i ? 'background-color: #064E3B; color: white;' : 'color: #1e293b;' %>">
               <%= i %>
             </a>
         <% } %>
 
         <% if (currentPage < totalPages) { %>
-            <a href="./?page=<%= currentPage + 1 %><%= queryStr %>" style="padding: 8px 12px; border: 1px solid #e2e8f0; text-decoration: none; color: #1e293b; border-radius: 4px;">다음</a>
+            <a href="/stud6/board?page=<%= currentPage + 1 %><%= queryStr %>" style="padding: 8px 12px; border: 1px solid #e2e8f0; text-decoration: none; color: #1e293b; border-radius: 4px;">다음</a>
         <% } %>
     </div>
   </main>
