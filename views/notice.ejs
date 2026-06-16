@@ -226,6 +226,15 @@
 
     footer { text-align: center; padding: 40px 20px; background: var(--primary-color); color: rgba(255,255,255,0.6); font-size: 14px; margin-top: auto; }
 
+    /* 검색어 하이라이트 스타일 */
+    .highlight {
+      background-color: #fef08a; /* 노란색 형광펜 */
+      color: #c2410c;            /* 붉은색 글씨 */
+      font-weight: bold;
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+
     @media (max-width: 1024px) {
       .top-bar {
         padding: 10px 20px;
@@ -345,8 +354,16 @@
             <% notices.forEach((notice, index) => { %>
               <tr>
                 <td style="padding-left: 30px;">
-                  <a href="./view/<%= notice.id %>" class="post-title">
-                    <%= notice.title %>
+                  <a href="/stud6/notice/view/<%= notice.id %>" class="post-title" style="display: inline;">
+                    <% 
+                      let displayTitle = notice.title;
+                      // 라우터에서 넘겨준 검색어 변수 이름이 currentSearch 이므로 이에 맞춤
+                      if (typeof currentSearch !== 'undefined' && currentSearch) {
+                        const regex = new RegExp(`(${currentSearch})`, 'gi');
+                        displayTitle = displayTitle.replace(regex, `<mark class="highlight">$1</mark>`);
+                      }
+                    %>
+                    <%- displayTitle %>
                   </a>
                 </td>
                 <td style="text-align:center; color: var(--text-gray); font-size: 0.9em;">
