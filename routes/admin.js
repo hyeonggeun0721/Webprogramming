@@ -205,7 +205,7 @@ router.post('/user/delete', (req, res) => {
                 }
 
                 db.run("COMMIT");
-                res.redirect('./users');
+                res.send('<script>alert("삭제되었습니다."); location.href="/stud6/admin/users";</script>');
             });
         });
     });
